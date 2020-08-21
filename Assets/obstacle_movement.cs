@@ -6,11 +6,13 @@ public class obstacle_movement : MonoBehaviour
 {
     public Rigidbody rb;
     public GameObject obstacle;
+    private GameObject player_obj = null;
     private float pos;
     public float height;
     private float random_lane;
     private int random_lane_int;
     private float random_distance;
+    private float player_pos;
     public Collider col;
     private Vector3 spawnCheck_origin;
     private float carSpeed;
@@ -30,7 +32,7 @@ public class obstacle_movement : MonoBehaviour
     public float timeToCollisionRightBack;
     public float velocityDifferenceLeftBack;
     public float timeToCollisionLeftBack;
-    
+
 
     public int rightLaneSafetyCount;
     */
@@ -67,6 +69,9 @@ public class obstacle_movement : MonoBehaviour
         layermask = sensors | players;
         layermask = ~layermask;
 
+        if (player_obj == null)
+             player_obj = GameObject.FindGameObjectWithTag("Player");
+
         col = gameObject.GetComponent<Collider>();
 
         closeSensorScript = gameObject.GetComponentInChildren<sensor_script>();
@@ -87,20 +92,15 @@ public class obstacle_movement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        player_pos = player_obj.transform.position.z;
         pos = transform.position.z;
         height = transform.position.y;
-        if (pos < -8 || height < -30)
+        if (pos < player_pos - 8 || height < -30)
         {
-            
-
-            
-            
             //float rayLength = 8f;
-
             random_lane_int = Random.Range(-3, 4);
             random_lane = (float)random_lane_int;
             random_distance = Random.Range(100, 150);
-
 
             spawnCheck_origin = new Vector3(2 * random_lane, 1, random_distance); //+ 4f);
 
@@ -226,7 +226,7 @@ public class obstacle_movement : MonoBehaviour
             needToCheckCurrentLanePreference = false;
             preferCurrentLaneToLeft = false;
             preferCurrentLaneToRight = false;
-            
+
 
             rightLaneChangeSafe = false;
             leftLaneChangeSafe = false;
@@ -292,7 +292,7 @@ public class obstacle_movement : MonoBehaviour
                         {
 
                             float closeVelocityDifferenceRight = rb.velocity.z - closeRb.velocity.z;
-                            
+
                             if (closeVelocityDifferenceRight != 0)
                             {
                                 float newRightTimeToCollision = distanceFromCenter / closeVelocityDifferenceRight;
@@ -303,7 +303,7 @@ public class obstacle_movement : MonoBehaviour
                                     if (needToCheckCurrentLanePreference == true)
                                     {
                                         preferCurrentLaneToRight = false;
-                                        
+
                                         if (distanceFromCenter > 0)
                                         {
                                             if (closeRb.velocity.z < otherFrontVelocity)
@@ -311,11 +311,11 @@ public class obstacle_movement : MonoBehaviour
                                                 preferCurrentLaneToRight = true;
                                             }
                                         }
-                                        
+
                                     }
                                 }
                             }
-                            
+
                         }
                         //else if (distanceFromCenter < 1 && distanceFromCenter > -1)
                         //{
@@ -366,7 +366,7 @@ public class obstacle_movement : MonoBehaviour
 
                         }
                     }
-                    
+
                     else if (closeDestinationLane == currentLane && closeDestinationLane != closeCurrentLane)
                     {
                         if (closeDestinationLane > closeCurrentLane) // then they must be changing lanes to the right
@@ -388,7 +388,7 @@ public class obstacle_movement : MonoBehaviour
                                     if (newLeftTimeToCollision > 0 && newLeftTimeToCollision < leftTimeToCollision)
                                     {
                                         leftTimeToCollision = newLeftTimeToCollision;
-                                        
+
                                     }
                                 }
                             }
@@ -416,7 +416,7 @@ public class obstacle_movement : MonoBehaviour
                             }
                         }
                     }
-                    
+
 
                     //myMessage += "); ";
 
@@ -427,7 +427,7 @@ public class obstacle_movement : MonoBehaviour
             //Debug.Log(myMessage);
             //Debug.Break();
 
-            
+
             if (currentLane != 3)
             {
                 if (rightTimeToCollision < 0)
@@ -469,7 +469,7 @@ public class obstacle_movement : MonoBehaviour
                 {
                     if (preferCurrentLaneToLeft == false)
                     {
-                        
+
                         leftLaneChangeSafe = true;
                     }
                     else
@@ -511,7 +511,7 @@ public class obstacle_movement : MonoBehaviour
                 {
                     destinationLane++;
                     rb.AddForce(75, 0, 0);
-                    
+
                     closeSensorScript.sensorResizeX = 1.5f;
                     closeSensorScript.sensorPosX = 0.25f;
 
@@ -605,7 +605,7 @@ public class obstacle_movement : MonoBehaviour
         gotBlasted = true;
     }
 
-    
+
     private void OnCollisionEnter(Collision collision)
     {
         if (gotBlasted == true)
@@ -695,7 +695,7 @@ public class obstacle_movement : MonoBehaviour
                     destinationLane = -3;
                 }else if (blastPos < -3)
                 {
-                    destinationLane = -2; 
+                    destinationLane = -2;
                 }else if (blastPos < -1)
                 {
                     destinationLane = -1;
@@ -712,7 +712,7 @@ public class obstacle_movement : MonoBehaviour
                 {
                     destinationLane = 3;
                 }
-                
+
 
                 if (blastPos > (2 * destinationLane))
                 {
@@ -726,9 +726,9 @@ public class obstacle_movement : MonoBehaviour
                 gotBlasted = false;
             }
         }
-        
+
     }
-    
+
 
 }
 
@@ -771,7 +771,7 @@ public class obstacle_movement : MonoBehaviour
                     {
                         rightLaneSafetyCount++;
                     }
-  
+
                 }
             }
             else
@@ -807,7 +807,7 @@ public class obstacle_movement : MonoBehaviour
             rightLaneChangeSafe = true;
             //Debug.Log(rb.name + " is safe to change lanes to the right.");
         }
-        
+
 
         }
 
@@ -896,7 +896,7 @@ public class obstacle_movement : MonoBehaviour
                     //Debug.Log(rb.name + "went to to a tossup and chose right.");
                     destinationLane++;
                     rb.AddForce(75, 0, 0);
-                    
+
                 }
             }
             //Debug.Break();
@@ -923,7 +923,7 @@ public class obstacle_movement : MonoBehaviour
         // DELETE ABOVE ??? OR KEEP???
     }
 
-        
+
         // DELETE BELOW?? OR KEEP>>>
         if (Physics.Raycast(rightForward, out rightForwardHit, lanecheckRayLength) == true || Physics.Raycast(rightBack, out rightBackwardHit, lanecheckRayLength) == true)
         {
