@@ -161,6 +161,7 @@ public class Player_movement : MonoBehaviour
 
     void FixedUpdate()
     {
+
         if (postCrashZvelFix == true)
         {
             rb.velocity = new Vector3(0, 0, crashResetVel.z);
@@ -341,9 +342,9 @@ public class Player_movement : MonoBehaviour
 
                     carCrash = false;
                 }
-                
+
             }
-            
+
         }
         else
         {
@@ -401,7 +402,7 @@ public class Player_movement : MonoBehaviour
                     boostCounter = 1f;
                     rb.AddForce(0, 0, boostForce/2);
                 }
-                
+
                 if (Input.GetKey(KeyCode.Space) && isGrounded == true && jumpOn == false && jumpRecharge <= 0)
                 {
                     jumpOn = true;
@@ -479,7 +480,7 @@ public class Player_movement : MonoBehaviour
                         //rb.AddForce(0, 0, frontHingeScript.playerZvel);
                         rb.angularVelocity = Vector3.zero;
                         boostRecharge = 0f;
-                    } 
+                    }
                 }
             }
 
@@ -546,7 +547,7 @@ public class Player_movement : MonoBehaviour
 
                 gameObject.AddComponent<HingeJoint>();
                 hinge = gameObject.GetComponent<HingeJoint>();
-                
+
                 if (frontPos > backPos)
                 {
                     anchorCoordinates = anchorObjectFront.transform.position;
@@ -664,7 +665,7 @@ public class Player_movement : MonoBehaviour
 
             crashZvelocity = rb.velocity.z;
             //Debug.Log("Player's crash velocity (z) is: " + crashZvelocity);
-            
+
             //Debug.Break();
         }
     }
