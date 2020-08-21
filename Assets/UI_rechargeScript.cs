@@ -37,7 +37,7 @@ public class UI_rechargeScript : MonoBehaviour
         if(boost_recharge <= 0){
             // Boost ready, set to zero to prevent negative and change color of text
             boost_recharge = 0;
-            boost_text = "<color=#000000>Boost: " + boost_recharge.ToString("F2") + "</color>\n";
+            boost_text = "<color=#008000>Boost: READY </color>\n";
         }else{
             // Boost not ready, set color back to red
             boost_text = "<color=#FF3232>Boost: " + boost_recharge.ToString("F2") + "</color>\n";
@@ -46,7 +46,7 @@ public class UI_rechargeScript : MonoBehaviour
         if(jump_recharge <= 0){
             // jump ready, set to zero to prevent negative and change color of text
             jump_recharge = 0;
-            jump_text = "<color=#000000>jump: " + jump_recharge.ToString("F2") + "</color>\n";
+            jump_text = "<color=#008000>jump: READY </color>\n";
         }else{
             // jump not ready, set color back to red
             jump_text = "<color=#FF3232>jump: " + jump_recharge.ToString("F2") + "</color>\n";
@@ -55,7 +55,7 @@ public class UI_rechargeScript : MonoBehaviour
         if(blast_recharge <= 0){
             // Blast ready, set to zero to prevent negative and change color of text
             blast_recharge = 0;
-            blast_text = "<color=#000000>Blast: " + blast_recharge.ToString("F2") + "</color>";
+            blast_text = "<color=#008000>Blast: READY </color>";
         }else{
             // Blast not ready, set color back to red
             blast_text = "<color=#FF3232>Blast: " + blast_recharge.ToString("F2") + "</color>";
