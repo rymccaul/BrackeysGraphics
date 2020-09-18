@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: car2_mat
-  m_Shader: {fileID: -6465566751694194690, guid: 0798b34ca4a46664fa11ef14bf4e6d9c,
+  m_Shader: {fileID: -6465566751694194690, guid: 2961eebe4e58e09419f0d6e868cde531,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -117,7 +117,8 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Color_7E447BC2: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 0}
-    - Color_F8306B56: {r: 0.6509434, g: 0.64164823, b: 0.31011927, a: 0}
+    - Color_9E6C9F99: {r: 0.5566038, g: 0, b: 0.4478921, a: 0}
+    - Color_F8306B56: {r: 0.6037736, g: 0.088287644, b: 0.088287644, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

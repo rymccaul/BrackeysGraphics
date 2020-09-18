@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 4664856459876892219}
   - component: {fileID: 4664856459876892220}
   m_Layer: 10
-  m_Name: obstacle 01
+  m_Name: prefab_obstacle_car_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -143,7 +143,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c392ea9734cab2a42809c2047c076de4, type: 2}
+  - {fileID: 2100000, guid: f15d83c21e3b55947800c0609b897d37, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -301,11 +301,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 531a4a95391b5e547ab8d5452769a41e, type: 2}
+      objectReference: {fileID: 2100000, guid: a424d62d26c549e42b09a3b3430f4bed, type: 2}
     - target: {fileID: -927199367670048503, guid: e1e85664b385aaf408d38f922ab5ec4a,
         type: 3}
       propertyPath: m_Name
       value: car1_uv1a
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: e1e85664b385aaf408d38f922ab5ec4a,
+        type: 3}
+      propertyPath: m_TagString
+      value: carUV
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e1e85664b385aaf408d38f922ab5ec4a, type: 3}
