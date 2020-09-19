@@ -100,7 +100,7 @@ public class obstacle_movement : MonoBehaviour
             //float rayLength = 8f;
             random_lane_int = Random.Range(-3, 4);
             random_lane = (float)random_lane_int;
-            random_distance = Random.Range(100, 150);
+            random_distance = Random.Range(player_pos + 100, player_pos + 150);
 
             spawnCheck_origin = new Vector3(2 * random_lane, 1, random_distance); //+ 4f);
 
