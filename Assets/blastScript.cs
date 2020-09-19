@@ -20,9 +20,6 @@ public class blastScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // turn off mesh renderer to make invisible when not in use
-        GetComponent<MeshRenderer>().enabled = false;
-
         rb.position = new Vector3(0, -40, -15);
         minScale = new Vector3(1.5f, 1, 1);
         maxScale = new Vector3(3, 1, 1);
@@ -38,15 +35,13 @@ public class blastScript : MonoBehaviour
     {
         if (blastOn == true)
         {
-
             float currentRange = rb.transform.position.z - startPosZ;
             if (currentRange > maxRange)
             {
-
+               
                 rb.position = new Vector3(0, -40, 15);
                 rb.transform.localScale = minScale;
                 rb.velocity = Vector3.zero;
-                GetComponent<MeshRenderer>().enabled = false;
                 blastOn = false;
             }
             else
@@ -64,7 +59,6 @@ public class blastScript : MonoBehaviour
             {
                 if (blastRecharge < 0)
                 {
-                    GetComponent<MeshRenderer>().enabled = true;
                     Vector3 playerPos = playerRb.transform.position;
                     startPosZ = playerPos.z;
                     Vector3 playerVel = playerRb.velocity;
@@ -73,7 +67,7 @@ public class blastScript : MonoBehaviour
                     blastOn = true;
                 }
             }
-
+            
         }
     }
 
