@@ -75,6 +75,11 @@ public class Player_movement : MonoBehaviour
     public float radius;
     public Vector3 blastCentre;
 
+    // Mobile Touch specific variables
+    private Touch theTouch;
+    private Vector2 touchStartPosition, touchEndPosition, screenCenter;
+    private float screenWidth;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -116,6 +121,7 @@ public class Player_movement : MonoBehaviour
         radius = 5;
         blastForce = 1000;
 
+        screenWidth = Screen.width;
     }
 
     /*
@@ -277,12 +283,12 @@ public class Player_movement : MonoBehaviour
                         rb.AddForce(-crashXvelocity * 100f * Time.deltaTime, 0, 0);
                     }
 
-                    if (Input.GetKey("d"))
+                    if (Input.GetKey("d") || (_ReturnSide() == "Right"))
                     {
                         rb.AddForce(turnspeed * Time.deltaTime *1.5f, 0, 0);
                     }
 
-                    if (Input.GetKey("a"))
+                    if (Input.GetKey("a") || (_ReturnSide() == "Left"))
                     {
                         rb.AddForce(-turnspeed * Time.deltaTime * 1.5f, 0, 0);
                     }
@@ -353,13 +359,14 @@ public class Player_movement : MonoBehaviour
                 if (jumpOn == false)
                 {
 
-                    if (Input.GetKey("d") && (currentlane == destinationlane))
+                    if ((Input.GetKey("d") || (_ReturnSide() == "Right"))
+                                        && (currentlane == destinationlane))
                     {
                         destinationlane++;
                         rb.AddForce(turnspeed, 0, 0);
                     }
 
-                    if (Input.GetKey("a") && (currentlane == destinationlane))
+                    if ((Input.GetKey("a") || (_ReturnSide() == "Left")) && (currentlane == destinationlane))
                     {
                         destinationlane--;
                         rb.AddForce(-turnspeed, 0, 0);
@@ -379,7 +386,7 @@ public class Player_movement : MonoBehaviour
                         rb.velocity = jumpXSpeedLimit;
                     }
 
-                    if (Input.GetKey("d"))
+                    if (Input.GetKey("d") || (_ReturnSide() == "Right"))
                     {
                         if (rb.velocity.x < 5)
                         {
@@ -387,7 +394,7 @@ public class Player_movement : MonoBehaviour
                         }
                     }
 
-                    if (Input.GetKey("a"))
+                    if (Input.GetKey("a") || (_ReturnSide() == "Left"))
                     {
                         if (rb.velocity.x > -5)
                         {
@@ -670,4 +677,36 @@ public class Player_movement : MonoBehaviour
         }
     }
 
+    // Private function to return side of screen tapped
+   // No params, returns a string "Left" or "Right if tapped area is < Screen.width / 2 or not
+   // Returns "" by default
+   // @TODO Some redundances currently within the function, not sure whether things work/don't work because of latency
+   // Will need to prune
+   string _ReturnSide()
+   {
+       if (Input.touchCount > 0) {
+           theTouch = Input.GetTouch(0);
+
+           if (theTouch.phase == TouchPhase.Began)
+           {
+              // Debug.Log(touchStartPosition.x);
+              // Debug.Log(Screen.width / 2);
+              // Debug.Log("Tapped");
+               touchStartPosition = theTouch.position;
+           } else if (theTouch.phase == TouchPhase.Ended || theTouch.phase == TouchPhase.Moved)
+           {
+               //Debug.Log("Untapped");
+               if (theTouch.position.x > (Screen.width / 2))
+               {
+                  // Debug.Log("Right");
+                   return "Right";
+               } else if (theTouch.position.x < (Screen.width / 2))
+               {
+
+                   return "Left";
+               }
+           }
+       }
+       return "";
+   }
 }
