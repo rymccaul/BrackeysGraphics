@@ -13,7 +13,8 @@ public class material_controller : MonoBehaviour
     {
         leftOrRight = 0;        // use -1 to represent left blinker, 0 for no blinker, 1 for right blinker
         brakeOn = false;        // brakeOn bool will let us know whether to use brakelights or not
-                                // we will read whether we changing lanes and/or braking from obstacle_movement.cs
+                                // we will read whether we changing lanes from obstacle_movement.cs
+                                // we will read whether we are braking from sensor_script.cs
 
         mat = gameObject.GetComponent<Renderer>().material;
     }
@@ -28,11 +29,7 @@ public class material_controller : MonoBehaviour
                 mat.SetFloat("Vector1_44AB5134", 2);
                 mat.SetFloat("Vector1_1FC30E3", 0);
                 mat.SetFloat("Vector1_B1DA328B", 0);
-                /*
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_44AB5134", 2);
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_FC30E3", 0);
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_B1DA328B", 0);
-                */
+
                 // left blinker ON , brakelights OFF
             }
             else if (leftOrRight == 1)
@@ -40,11 +37,7 @@ public class material_controller : MonoBehaviour
                 mat.SetFloat("Vector1_44AB5134", 0);
                 mat.SetFloat("Vector1_1FC30E3", 2);
                 mat.SetFloat("Vector1_B1DA328B", 0);
-                /*
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_44AB5134", 0);
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_FC30E3", 2);
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_B1DA328B", 0);
-                */
+
                 // right blinker ON , brakelights OFF
             }
             else
@@ -52,11 +45,7 @@ public class material_controller : MonoBehaviour
                 mat.SetFloat("Vector1_44AB5134", 0);
                 mat.SetFloat("Vector1_1FC30E3", 0);
                 mat.SetFloat("Vector1_B1DA328B", 0);
-                /*
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_44AB5134", 0);
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_FC30E3", 0);
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_B1DA328B", 0);
-                */
+
                 // blinkers OFF, brakelights OFF
             }
         }
@@ -67,11 +56,7 @@ public class material_controller : MonoBehaviour
                 mat.SetFloat("Vector1_44AB5134", 2);
                 mat.SetFloat("Vector1_1FC30E3", 0);
                 mat.SetFloat("Vector1_B1DA328B", 2);
-                /*
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_44AB5134", 2);
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_FC30E3", 0);
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_B1DA328B", 2);
-                */
+
                 // left blinker ON, brakelights ON
             }
             else if (leftOrRight == 1)
@@ -79,11 +64,7 @@ public class material_controller : MonoBehaviour
                 mat.SetFloat("Vector1_44AB5134", 0);
                 mat.SetFloat("Vector1_1FC30E3", 2);
                 mat.SetFloat("Vector1_B1DA328B", 2);
-                /*
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_44AB5134", 0);
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_FC30E3", 2);
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_B1DA328B", 2);
-                */
+
                 // right blinker ON, brakelights ON
             }
             else
@@ -91,11 +72,7 @@ public class material_controller : MonoBehaviour
                 mat.SetFloat("Vector1_44AB5134", 0);
                 mat.SetFloat("Vector1_1FC30E3", 0);
                 mat.SetFloat("Vector1_B1DA328B", 2);
-                /*
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_44AB5134", 0);
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_FC30E3", 0);
-                gameObject.GetComponent<Renderer>().material.SetFloat("Vector1_B1DA328B", 2);
-                */
+
                 // blinkers OFF, brakelights ON
             }
         }
