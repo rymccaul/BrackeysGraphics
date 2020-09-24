@@ -203,11 +203,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab_array:
   - {fileID: 4664856459876892218, guid: 3bed7f629f1ca314da9312afcc279f69, type: 3}
-  - {fileID: 4664856459876892218, guid: 530d7347da956d24b9dc1253d9aabffa, type: 3}
-  - {fileID: 4664856459876892218, guid: 8deaa39309364a746becea8aaa57d75b, type: 3}
-  - {fileID: 4664856459876892218, guid: e79ec0ed539171447bd8b51189096c4b, type: 3}
-  - {fileID: 4664856459876892218, guid: 90553f8266d1c27459eb86ec22f33efa, type: 3}
-  - {fileID: 4664856459876892218, guid: 0a6172e515a201b4f9d08774aa32cd68, type: 3}
   traffic_count: 20
 --- !u!114 &23369440
 MonoBehaviour:
