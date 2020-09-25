@@ -31,6 +31,7 @@ public class UI_score_script : MonoBehaviour
         score_text.text = (current_score).ToString("#");
     }
 
+    // To be used later for more complicated high score calculation
     private float calculateScoreUpdate(float current_speed, float current_time){
         return current_speed;
     }

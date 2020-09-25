@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class UI_timeScript : MonoBehaviour
 {
-    public Text time_text;
+    public TextMeshProUGUI time_text;
     public float play_time;
 
     private float start_time;
