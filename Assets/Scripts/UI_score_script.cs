@@ -9,7 +9,7 @@ public class UI_score_script : MonoBehaviour
 
     private TextMeshProUGUI score_text = null;
     private GameObject speed_text_obj = null;
-    private GameObject time_text_obj = null;
+    //private GameObject time_text_obj = null;
 
     private float player_speed;
 
