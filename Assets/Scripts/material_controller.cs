@@ -8,6 +8,9 @@ public class material_controller : MonoBehaviour
     public int leftOrRight;
     public bool brakeOn;
     public Material mat;
+
+    private int brake = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,59 +25,25 @@ public class material_controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (brakeOn == false)
+        if (brakeOn == false) brake = 0; else brake = 2;
+
+        switch(leftOrRight)
         {
-            if (leftOrRight == -1)
-            {
-                mat.SetFloat("Vector1_44AB5134", 2);
-                mat.SetFloat("Vector1_1FC30E3", 0);
-                mat.SetFloat("Vector1_B1DA328B", 0);
-
-                // left blinker ON , brakelights OFF
-            }
-            else if (leftOrRight == 1)
-            {
-                mat.SetFloat("Vector1_44AB5134", 0);
-                mat.SetFloat("Vector1_1FC30E3", 2);
-                mat.SetFloat("Vector1_B1DA328B", 0);
-
-                // right blinker ON , brakelights OFF
-            }
-            else
-            {
-                mat.SetFloat("Vector1_44AB5134", 0);
-                mat.SetFloat("Vector1_1FC30E3", 0);
-                mat.SetFloat("Vector1_B1DA328B", 0);
-
-                // blinkers OFF, brakelights OFF
-            }
+            case -1:
+                set_material(2, 0, brake);
+                break;
+            case 1:
+                set_material(0, 2, brake);
+                break;
+            default:
+                set_material(0, 0, brake);
+                break;
         }
-        else
-        {
-            if (leftOrRight == -1)
-            {
-                mat.SetFloat("Vector1_44AB5134", 2);
-                mat.SetFloat("Vector1_1FC30E3", 0);
-                mat.SetFloat("Vector1_B1DA328B", 2);
+    }
 
-                // left blinker ON, brakelights ON
-            }
-            else if (leftOrRight == 1)
-            {
-                mat.SetFloat("Vector1_44AB5134", 0);
-                mat.SetFloat("Vector1_1FC30E3", 2);
-                mat.SetFloat("Vector1_B1DA328B", 2);
-
-                // right blinker ON, brakelights ON
-            }
-            else
-            {
-                mat.SetFloat("Vector1_44AB5134", 0);
-                mat.SetFloat("Vector1_1FC30E3", 0);
-                mat.SetFloat("Vector1_B1DA328B", 2);
-
-                // blinkers OFF, brakelights ON
-            }
-        }
+    private void set_material(int ind_l, int ind_r, int brake){
+        mat.SetFloat("Vector1_44AB5134", ind_l);
+        mat.SetFloat("Vector1_1FC30E3", ind_r);
+        mat.SetFloat("Vector1_B1DA328B", brake);
     }
 }
