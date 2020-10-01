@@ -25,15 +25,15 @@ public class material_controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (brakeOn == false) brake = 0; else brake = 2;
+        if (brakeOn == false) brake = 0; else brake = 1;
 
         switch(leftOrRight)
         {
             case -1:
-                set_material(2, 0, brake);
+                set_material(1, 0, brake);
                 break;
             case 1:
-                set_material(0, 2, brake);
+                set_material(0, 1, brake);
                 break;
             default:
                 set_material(0, 0, brake);
@@ -42,8 +42,11 @@ public class material_controller : MonoBehaviour
     }
 
     private void set_material(int ind_l, int ind_r, int brake){
-        mat.SetFloat("Vector1_44AB5134", ind_l);
-        mat.SetFloat("Vector1_1FC30E3", ind_r);
-        mat.SetFloat("Vector1_B1DA328B", brake);
+        //mat.SetFloat("Vector1_44AB5134", ind_l);
+        //mat.SetFloat("Vector1_1FC30E3", ind_r);
+        //mat.SetFloat("Vector1_B1DA328B", brake);
+        mat.SetFloat("left_signal_power", ind_l);
+        mat.SetFloat("right_signal_power", ind_r);
+        mat.SetFloat("brake_light_power", brake);
     }
 }
