@@ -203,6 +203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab_array:
   - {fileID: 4664856459876892218, guid: 3bed7f629f1ca314da9312afcc279f69, type: 3}
+  - {fileID: 4664856459876892218, guid: e4a8a66bcb684c54b8af9cdb12244a67, type: 3}
   traffic_count: 20
 --- !u!114 &23369440
 MonoBehaviour:
