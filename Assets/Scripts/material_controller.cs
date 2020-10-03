@@ -7,7 +7,13 @@ public class material_controller : MonoBehaviour
 
     public int leftOrRight;
     public bool brakeOn;
-    public Material mat;
+    //public Material mat;
+    public Material defaultMat;
+    public Material left;
+    public Material right;
+    public Material left_b;
+    public Material right_b;
+    public Material brakeMat;
 
     private int brake = 0;
 
@@ -19,34 +25,42 @@ public class material_controller : MonoBehaviour
                                 // we will read whether we changing lanes from obstacle_movement.cs
                                 // we will read whether we are braking from sensor_script.cs
 
-        mat = gameObject.GetComponent<Renderer>().material;
+        GetComponent<Renderer>().material = defaultMat;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (brakeOn == false) brake = 0; else brake = 1;
-
-        switch(leftOrRight)
+        if (brakeOn == false)
         {
-            case -1:
-                set_material(1, 0, brake);
-                break;
-            case 1:
-                set_material(0, 1, brake);
-                break;
-            default:
-                set_material(0, 0, brake);
-                break;
+            if (leftOrRight == -1)
+            {
+                GetComponent<Renderer>().material = left;
+            }
+            else if (leftOrRight == 0)
+            {
+                GetComponent<Renderer>().material = defaultMat;
+            }
+            else
+            {
+                GetComponent<Renderer>().material = right;
+            }
+        }
+        else
+        {
+            if (leftOrRight == -1)
+            {
+                GetComponent<Renderer>().material = left_b;
+            }
+            else if (leftOrRight == 0)
+            {
+                GetComponent<Renderer>().material = brakeMat;
+            }
+            else
+            {
+                GetComponent<Renderer>().material = right_b;
+            }
         }
     }
 
-    private void set_material(int ind_l, int ind_r, int brake){
-        //mat.SetFloat("Vector1_44AB5134", ind_l);
-        //mat.SetFloat("Vector1_1FC30E3", ind_r);
-        //mat.SetFloat("Vector1_B1DA328B", brake);
-        mat.SetFloat("left_signal_power", ind_l);
-        mat.SetFloat("right_signal_power", ind_r);
-        mat.SetFloat("brake_light_power", brake);
-    }
 }

@@ -249,7 +249,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftOrRight: 0
   brakeOn: 0
-  mat: {fileID: 0}
+  defaultMat: {fileID: 2100000, guid: 7d94db9c36b01bc4197191180e521ec7, type: 2}
+  left: {fileID: 2100000, guid: 14ea64a3194b82147bd307d31a1fdeaa, type: 2}
+  right: {fileID: 2100000, guid: 58d7a54b71da17f459a8fcda690317ea, type: 2}
+  left_b: {fileID: 2100000, guid: dd0669931bc1e544ebc014ff9b3717b6, type: 2}
+  right_b: {fileID: 2100000, guid: 4768cc261645d854c95386c2dc7e1b4d, type: 2}
+  brakeMat: {fileID: 2100000, guid: 3873ceb5c930a5c41b1390421d09435b, type: 2}
 --- !u!1001 &2113382836165962716
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -329,7 +334,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -1504981713932161579, guid: 516b6cd68abc2774aba46729febf8ec0,
         type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 516b6cd68abc2774aba46729febf8ec0,
+        type: 3}
       propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7d94db9c36b01bc4197191180e521ec7, type: 2}
+    - target: {fileID: -1504981713932161579, guid: 516b6cd68abc2774aba46729febf8ec0,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: 7d94db9c36b01bc4197191180e521ec7, type: 2}
     - target: {fileID: -927199367670048503, guid: 516b6cd68abc2774aba46729febf8ec0,
