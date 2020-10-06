@@ -1163,6 +1163,7 @@ GameObject:
   - component: {fileID: 904389565}
   - component: {fileID: 904389569}
   - component: {fileID: 904389570}
+  - component: {fileID: 904389571}
   m_Layer: 12
   m_Name: player
   m_TagString: Player
@@ -1275,6 +1276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c2d9ac8dc6584047b4631dee51b4914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  swipeControls: {fileID: 904389571}
   rb: {fileID: 904389569}
   startpos_x: 0
   startpos_y: 1
@@ -1333,6 +1335,18 @@ MonoBehaviour:
   blastForce: 0
   radius: 0
   blastCentre: {x: 0, y: 0, z: 0}
+--- !u!114 &904389571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904389564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 798c436252c3db34aa95368fa46c565e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &927962095 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 2c79309c6bdc55b4eba32f63ec7777ba,

@@ -2,6 +2,8 @@
 
 public class Player_movement : MonoBehaviour
 {
+    public Swipe swipeControls;
+
     public Rigidbody rb;
     public float startpos_x = 0;
     public float startpos_y = 1;
@@ -684,7 +686,7 @@ public class Player_movement : MonoBehaviour
    // Will need to prune
    string _ReturnSide()
    {
-       if (Input.touchCount > 0) {
+       if (Input.touchCount > 0) { // Screen is being touched
            theTouch = Input.GetTouch(0);
 
            if (theTouch.phase == TouchPhase.Began)
