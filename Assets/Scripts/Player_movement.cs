@@ -78,8 +78,10 @@ public class Player_movement : MonoBehaviour
     public Vector3 blastCentre;
 
     // Mobile Touch specific variables
+    private string side_tapped = "No side";
     private Touch theTouch;
     private Vector2 touchStartPosition, touchEndPosition, screenCenter;
+    private bool wantsToJump;
     private float screenWidth;
 
     // Start is called before the first frame update
@@ -169,6 +171,19 @@ public class Player_movement : MonoBehaviour
 
     void FixedUpdate()
     {
+        wantsToJump = false;
+
+        if (swipeControls.TapLeft)
+            side_tapped = "Left";
+
+        if (swipeControls.TapRight)
+            side_tapped = "Right";
+
+        // if (Input.GetMouseButtonDown(0))
+        //     Debug.Log(side_tapped);
+
+        if (swipeControls.SwipeUp)
+            wantsToJump = true;
 
         if (postCrashZvelFix == true)
         {
@@ -285,12 +300,12 @@ public class Player_movement : MonoBehaviour
                         rb.AddForce(-crashXvelocity * 100f * Time.deltaTime, 0, 0);
                     }
 
-                    if (Input.GetKey("d") || (_ReturnSide() == "Right"))
+                    if (Input.GetKey("d") || (swipeControls.TapRight))
                     {
                         rb.AddForce(turnspeed * Time.deltaTime *1.5f, 0, 0);
                     }
 
-                    if (Input.GetKey("a") || (_ReturnSide() == "Left"))
+                    if (Input.GetKey("a") || (swipeControls.TapLeft))
                     {
                         rb.AddForce(-turnspeed * Time.deltaTime * 1.5f, 0, 0);
                     }
@@ -361,14 +376,14 @@ public class Player_movement : MonoBehaviour
                 if (jumpOn == false)
                 {
 
-                    if ((Input.GetKey("d") || (_ReturnSide() == "Right"))
+                    if ((Input.GetKey("d") || (swipeControls.TapRight))
                                         && (currentlane == destinationlane))
                     {
                         destinationlane++;
                         rb.AddForce(turnspeed, 0, 0);
                     }
 
-                    if ((Input.GetKey("a") || (_ReturnSide() == "Left")) && (currentlane == destinationlane))
+                    if ((Input.GetKey("a") || (swipeControls.TapLeft)) && (currentlane == destinationlane))
                     {
                         destinationlane--;
                         rb.AddForce(-turnspeed, 0, 0);
@@ -388,7 +403,7 @@ public class Player_movement : MonoBehaviour
                         rb.velocity = jumpXSpeedLimit;
                     }
 
-                    if (Input.GetKey("d") || (_ReturnSide() == "Right"))
+                    if (Input.GetKey("d") || (swipeControls.TapRight))
                     {
                         if (rb.velocity.x < 5)
                         {
@@ -396,7 +411,7 @@ public class Player_movement : MonoBehaviour
                         }
                     }
 
-                    if (Input.GetKey("a") || (_ReturnSide() == "Left"))
+                    if (Input.GetKey("a") || (swipeControls.TapLeft))
                     {
                         if (rb.velocity.x > -5)
                         {
@@ -412,7 +427,8 @@ public class Player_movement : MonoBehaviour
                     rb.AddForce(0, 0, boostForce/2);
                 }
 
-                if (Input.GetKey(KeyCode.Space) && isGrounded == true && jumpOn == false && jumpRecharge <= 0)
+                if ((Input.GetKey(KeyCode.Space) && isGrounded == true && jumpOn == false && jumpRecharge <= 0) ||
+                    (wantsToJump && isGrounded == true && jumpOn == false && jumpRecharge <= 0))
                 {
                     jumpOn = true;
                     jumpRecharge = 3;
@@ -679,36 +695,5 @@ public class Player_movement : MonoBehaviour
         }
     }
 
-    // Private function to return side of screen tapped
-   // No params, returns a string "Left" or "Right if tapped area is < Screen.width / 2 or not
-   // Returns "" by default
-   // @TODO Some redundances currently within the function, not sure whether things work/don't work because of latency
-   // Will need to prune
-   string _ReturnSide()
-   {
-       if (Input.touchCount > 0) { // Screen is being touched
-           theTouch = Input.GetTouch(0);
 
-           if (theTouch.phase == TouchPhase.Began)
-           {
-              // Debug.Log(touchStartPosition.x);
-              // Debug.Log(Screen.width / 2);
-              // Debug.Log("Tapped");
-               touchStartPosition = theTouch.position;
-           } else if (theTouch.phase == TouchPhase.Ended || theTouch.phase == TouchPhase.Moved)
-           {
-               //Debug.Log("Untapped");
-               if (theTouch.position.x > (Screen.width / 2))
-               {
-                  // Debug.Log("Right");
-                   return "Right";
-               } else if (theTouch.position.x < (Screen.width / 2))
-               {
-
-                   return "Left";
-               }
-           }
-       }
-       return "";
-   }
 }
