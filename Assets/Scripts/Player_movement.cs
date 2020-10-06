@@ -78,10 +78,8 @@ public class Player_movement : MonoBehaviour
     public Vector3 blastCentre;
 
     // Mobile Touch specific variables
-    private string side_tapped = "No side";
-    private Touch theTouch;
-    private Vector2 touchStartPosition, touchEndPosition, screenCenter;
     private bool wantsToJump;
+    private bool wantsToBlast;
     private float screenWidth;
 
     // Start is called before the first frame update
@@ -171,16 +169,10 @@ public class Player_movement : MonoBehaviour
 
     void FixedUpdate()
     {
-        wantsToJump = false;
+        wantsToJump = wantsToBlast = false;
 
-        if (swipeControls.TapLeft)
-            side_tapped = "Left";
-
-        if (swipeControls.TapRight)
-            side_tapped = "Right";
-
-        // if (Input.GetMouseButtonDown(0))
-        //     Debug.Log(side_tapped);
+        if (swipeControls.SwipeDown)
+            wantsToBlast = true;
 
         if (swipeControls.SwipeUp)
             wantsToJump = true;
@@ -237,7 +229,7 @@ public class Player_movement : MonoBehaviour
         {
             blastOn = false;
         }
-        if (Input.GetKey("s"))
+        if (Input.GetKey("s") || wantsToBlast)
         {
             if (blastRecharge < 0)
             {
