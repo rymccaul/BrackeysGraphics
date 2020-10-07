@@ -95,7 +95,7 @@ MonoBehaviour:
   layermask: 0
   expensiveFunctCount: 0
   maxSpeed: 0
-  material_chooser: {fileID: 0}
+  material_chooser: {fileID: 2950444938422992226}
 --- !u!1 &4664856459876892218
 GameObject:
   m_ObjectHideFlags: 0
