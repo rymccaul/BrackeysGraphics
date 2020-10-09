@@ -2,6 +2,8 @@
 
 public class Player_movement : MonoBehaviour
 {
+    public Swipe swipeControls;
+
     public Rigidbody rb;
     public float startpos_x = 0;
     public float startpos_y = 1;
@@ -75,6 +77,11 @@ public class Player_movement : MonoBehaviour
     public float radius;
     public Vector3 blastCentre;
 
+    // Mobile Touch specific variables
+    private bool wantsToJump;
+    private bool wantsToBlast;
+    private float screenWidth;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -116,6 +123,7 @@ public class Player_movement : MonoBehaviour
         radius = 5;
         blastForce = 1000;
 
+        screenWidth = Screen.width;
     }
 
     /*
@@ -155,13 +163,25 @@ public class Player_movement : MonoBehaviour
             }
         }
     }
+
+    void Update(){
+
+    }
     */
 
     // Update is called once per frame
 
     void FixedUpdate()
     {
+        wantsToJump = wantsToBlast = false;
 
+        if (swipeControls.SwipeDown)
+            wantsToBlast = true;
+
+        if (swipeControls.SwipeUp)
+            wantsToJump = true;
+
+        // fix post-crash z velocity
         if (postCrashZvelFix == true)
         {
             rb.velocity = new Vector3(0, 0, crashResetVel.z);
@@ -184,14 +204,17 @@ public class Player_movement : MonoBehaviour
             boostRecharge -= Time.deltaTime;
             float currentSpeed = rb.velocity.z;
 
+            // Decay speed back to normal if not currently boosting
             if (Mathf.Abs(currentSpeed) < 0.5f)
             {
+                // if close to original speed, stop decaying
                 Vector3 resetSpeed = rb.velocity;
                 resetSpeed.z = 0;
                 rb.velocity = resetSpeed;
             }
             else
             {
+                // slowly decay speed down
                 if (currentSpeed > 0)
                 {
                     rb.AddForce(0, 0, -restoreSpeed * Time.deltaTime);
@@ -214,7 +237,8 @@ public class Player_movement : MonoBehaviour
         {
             blastOn = false;
         }
-        if (Input.GetKey("s"))
+
+        if (Input.GetKey("s") || wantsToBlast)
         {
             if (blastRecharge < 0)
             {
@@ -277,12 +301,12 @@ public class Player_movement : MonoBehaviour
                         rb.AddForce(-crashXvelocity * 100f * Time.deltaTime, 0, 0);
                     }
 
-                    if (Input.GetKey("d"))
+                    if (Input.GetKey("d") || (swipeControls.TapRight))
                     {
                         rb.AddForce(turnspeed * Time.deltaTime *1.5f, 0, 0);
                     }
 
-                    if (Input.GetKey("a"))
+                    if (Input.GetKey("a") || (swipeControls.TapLeft))
                     {
                         rb.AddForce(-turnspeed * Time.deltaTime * 1.5f, 0, 0);
                     }
@@ -353,13 +377,14 @@ public class Player_movement : MonoBehaviour
                 if (jumpOn == false)
                 {
 
-                    if (Input.GetKey("d") && (currentlane == destinationlane))
+                    if ((Input.GetKey("d") || (swipeControls.TapRight))
+                                        && (currentlane == destinationlane))
                     {
                         destinationlane++;
                         rb.AddForce(turnspeed, 0, 0);
                     }
 
-                    if (Input.GetKey("a") && (currentlane == destinationlane))
+                    if ((Input.GetKey("a") || (swipeControls.TapLeft)) && (currentlane == destinationlane))
                     {
                         destinationlane--;
                         rb.AddForce(-turnspeed, 0, 0);
@@ -379,7 +404,7 @@ public class Player_movement : MonoBehaviour
                         rb.velocity = jumpXSpeedLimit;
                     }
 
-                    if (Input.GetKey("d"))
+                    if (Input.GetKey("d") || (swipeControls.TapRight))
                     {
                         if (rb.velocity.x < 5)
                         {
@@ -387,7 +412,7 @@ public class Player_movement : MonoBehaviour
                         }
                     }
 
-                    if (Input.GetKey("a"))
+                    if (Input.GetKey("a") || (swipeControls.TapLeft))
                     {
                         if (rb.velocity.x > -5)
                         {
@@ -403,7 +428,8 @@ public class Player_movement : MonoBehaviour
                     rb.AddForce(0, 0, boostForce/2);
                 }
 
-                if (Input.GetKey(KeyCode.Space) && isGrounded == true && jumpOn == false && jumpRecharge <= 0)
+                if ((Input.GetKey(KeyCode.Space) && isGrounded == true && jumpOn == false && jumpRecharge <= 0) ||
+                    (wantsToJump && isGrounded == true && jumpOn == false && jumpRecharge <= 0))
                 {
                     jumpOn = true;
                     jumpRecharge = 3;
@@ -455,7 +481,9 @@ public class Player_movement : MonoBehaviour
 
                 if (posSwingCheck == true && negSwingCheck == true)
                 {
-                    if (Mathf.Abs(currentHingeRot) < (0.5f * swerveRecoveryFactor) && maxNegHingeRot > (-0.5f * swerveRecoveryFactor) && maxPosHingeRot < (0.5f * swerveRecoveryFactor))
+                    if (Mathf.Abs(currentHingeRot) < (0.5f * swerveRecoveryFactor)
+                    && maxNegHingeRot > (-0.5f * swerveRecoveryFactor) &&
+                        maxPosHingeRot < (0.5f * swerveRecoveryFactor))
                     {
                         Destroy(gameObject.GetComponent<HingeJoint>());
                         hingeApplied = false;
@@ -608,6 +636,7 @@ public class Player_movement : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
 
+        // collision with road
         if (collision.gameObject.layer == 8)
         {
             isGrounded = true;
@@ -624,6 +653,7 @@ public class Player_movement : MonoBehaviour
             }
         }
 
+        // collision with obstacles
         if (collision.gameObject.layer == 10)
         {
             Destroy(gameObject.GetComponent<HingeJoint>());
@@ -669,5 +699,6 @@ public class Player_movement : MonoBehaviour
             //Debug.Break();
         }
     }
+
 
 }
