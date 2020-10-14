@@ -70,8 +70,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Vector1_1639A5D: 0.54
+    - Vector1_39722E1C: 0
     - Vector1_7B48DC35: 1
+    - Vector1_7B8EDF8F: 0.4
     - Vector1_8542DC9: 1
+    - Vector1_BF44CCB3: 1
     - Vector1_EEC407E6: 1
     - _AlphaClip: 0
     - _Blend: 0
@@ -98,6 +102,7 @@ Material:
     - left_signal_power: 1
     - right_signal_power: 1
     m_Colors:
+    - Color_90F740DE: {r: 0.5188679, g: 0.080767184, b: 0.4909633, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
