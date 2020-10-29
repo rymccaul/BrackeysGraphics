@@ -16,15 +16,16 @@ public class cameraScript : MonoBehaviour
     public float smoothTime;
     private float velocityRef;
     private float dampPosition;
+    public float cameraMobility;
 
     // Start is called before the first frame update
     void Start()
     {
         smoothDampOn = true;
-        cameraDistance = 10f;
-        cameraHeight = 4.57f;
-        fov = 60f;
-        cameraAngle = 0;
+        cameraDistance = 12.92f;
+        cameraHeight = 4.53f;
+        fov = 45.55f;
+        cameraAngle = 1.01f;
         transform.position = new Vector3(0, cameraHeight, -cameraDistance);
         cameraRotation = Quaternion.Euler(cameraAngle, 0, 0);
         transform.rotation = cameraRotation;
@@ -33,16 +34,19 @@ public class cameraScript : MonoBehaviour
         pos = player.transform.position;
 
         velocityRef = 0;
-        smoothTime = 0.2f;
+        smoothTime = 0.25f;
+
+        cameraMobility = 0.5f;
 
     }
 
     // Update is called once per frame
     void LateUpdate()
     {
+
         if (smoothDampOn == true)
         {
-            dampPosition = Mathf.SmoothDamp(Camera.main.transform.position.x, (player.position.x) * 0.4f, ref velocityRef, smoothTime);
+            dampPosition = Mathf.SmoothDamp(Camera.main.transform.position.x, (player.position.x) * cameraMobility, ref velocityRef, smoothTime);
         }
         else
         {
