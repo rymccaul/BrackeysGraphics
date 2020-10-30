@@ -78,8 +78,11 @@ public class Player_movement : MonoBehaviour
     public Vector3 blastCentre;
 
     // Mobile Touch specific variables
-    private bool wantsToJump;
     public bool wantsToBlast;
+
+    private bool wantsToJump;
+    private bool wantsToMoveLeft;
+    private bool wantsToMoveRight;
     private float screenWidth;
 
     // Start is called before the first frame update
@@ -176,6 +179,12 @@ public class Player_movement : MonoBehaviour
 
       if (swipeControls.SwipeUp && boostRecharge <= 0)
           wantsToJump = true;
+
+      if (swipeControls.TapLeft)
+          wantsToMoveLeft = true;
+
+      if (swipeControls.TapRight)
+          wantsToMoveRight = true;
     }
 
 
@@ -304,14 +313,16 @@ public class Player_movement : MonoBehaviour
                         rb.AddForce(-crashXvelocity * 100f * Time.deltaTime, 0, 0);
                     }
 
-                    if (Input.GetKey("d") || (swipeControls.TapRight))
+                    if (Input.GetKey("d") || wantsToMoveRight)
                     {
                         rb.AddForce(turnspeed * Time.deltaTime *1.5f, 0, 0);
+                        wantsToMoveRight = false;
                     }
 
-                    if (Input.GetKey("a") || (swipeControls.TapLeft))
+                    if (Input.GetKey("a") || wantsToMoveLeft)
                     {
                         rb.AddForce(-turnspeed * Time.deltaTime * 1.5f, 0, 0);
+                        wantsToMoveLeft = false;
                     }
                 }
                 else
@@ -380,17 +391,19 @@ public class Player_movement : MonoBehaviour
                 if (jumpOn == false)
                 {
 
-                    if ((Input.GetKey("d") || (swipeControls.TapRight))
+                    if ((Input.GetKey("d") || (wantsToMoveRight))
                                         && (currentlane == destinationlane))
                     {
                         destinationlane++;
                         rb.AddForce(turnspeed, 0, 0);
+                        wantsToMoveRight = false;
                     }
 
-                    if ((Input.GetKey("a") || (swipeControls.TapLeft)) && (currentlane == destinationlane))
+                    if ((Input.GetKey("a") || (wantsToMoveLeft)) && (currentlane == destinationlane))
                     {
                         destinationlane--;
                         rb.AddForce(-turnspeed, 0, 0);
+                        wantsToMoveLeft = false;
                     }
                 }
                 else
@@ -407,20 +420,22 @@ public class Player_movement : MonoBehaviour
                         rb.velocity = jumpXSpeedLimit;
                     }
 
-                    if (Input.GetKey("d") || (swipeControls.TapRight))
+                    if (Input.GetKey("d") || (wantsToMoveRight))
                     {
                         if (rb.velocity.x < 5)
                         {
                             rb.AddForce(turnspeed * Time.deltaTime * 1.0f, 0, 0);
                         }
+                        wantsToMoveRight = false;
                     }
 
-                    if (Input.GetKey("a") || (swipeControls.TapLeft))
+                    if (Input.GetKey("a") || (wantsToMoveLeft))
                     {
                         if (rb.velocity.x > -5)
                         {
                             rb.AddForce(-turnspeed * Time.deltaTime * 1.0f, 0, 0);
                         }
+                        wantsToMoveLeft = false;
                     }
                 }
 
