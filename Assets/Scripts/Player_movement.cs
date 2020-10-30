@@ -164,22 +164,25 @@ public class Player_movement : MonoBehaviour
         }
     }
 
-    void Update(){
-
-    }
     */
+    void Update(){
+      // Move variables set to false to after the action has been executed, or
+      // for the powerups only if they were ready and executed. Else only set
+      // wants
+
+
+      if (swipeControls.SwipeDown && blastRecharge <= 0)
+          wantsToBlast = true;
+
+      if (swipeControls.SwipeUp && boostRecharge <= 0)
+          wantsToJump = true;
+    }
+
 
     // Update is called once per frame
 
     void FixedUpdate()
     {
-        wantsToJump = wantsToBlast = false;
-
-        if (swipeControls.SwipeDown)
-            wantsToBlast = true;
-
-        if (swipeControls.SwipeUp)
-            wantsToJump = true;
 
         // fix post-crash z velocity
         if (postCrashZvelFix == true)
@@ -257,7 +260,6 @@ public class Player_movement : MonoBehaviour
                         Debug.Log("We hit " + hit.name);
                     }
                     */
-
                 }
             }
         }
@@ -426,6 +428,7 @@ public class Player_movement : MonoBehaviour
                     boostOn = true;
                     boostCounter = 1f;
                     rb.AddForce(0, 0, boostForce/2);
+                    wantsToBlast = false;
                 }
 
                 if ((Input.GetKey(KeyCode.Space) && isGrounded == true && jumpOn == false && jumpRecharge <= 0) ||
@@ -437,6 +440,7 @@ public class Player_movement : MonoBehaviour
                     reduceXvel.x *= .25f;
                     rb.velocity = reduceXvel;
                     rb.AddForce(0, jumpForce, 0);
+                    wantsToJump = false;
                 }
 
             }
