@@ -456,7 +456,10 @@ public class Player_movement : MonoBehaviour
                 {
                     boostOn = true;
                     //boostCounter = 1f;     // this is the old boost method
-                    rb.AddForce(0, 0, boostForce/2);
+                    if (boostBar > 30f)
+                    {
+                        rb.AddForce(0, 0, boostForce / 2);
+                    }
                 }
 
                 if ((Input.GetKey(KeyCode.Space) && isGrounded == true && jumpOn == false && jumpRecharge <= 0) ||
