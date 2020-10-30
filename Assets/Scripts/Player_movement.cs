@@ -79,7 +79,7 @@ public class Player_movement : MonoBehaviour
 
     // Mobile Touch specific variables
     private bool wantsToJump;
-    private bool wantsToBlast;
+    public bool wantsToBlast;
     private float screenWidth;
 
     // Start is called before the first frame update
@@ -251,6 +251,7 @@ public class Player_movement : MonoBehaviour
                     blastCentre.z += 10f;
                     blastOn = true;
                     blastRecharge = 2;
+                    wantsToBlast = false;
                     /*
                     Collider[] blastRadius = Physics.OverlapSphere(blastCentre, radius, layermask);
                     foreach (Collider hit in blastRadius)
@@ -428,7 +429,6 @@ public class Player_movement : MonoBehaviour
                     boostOn = true;
                     boostCounter = 1f;
                     rb.AddForce(0, 0, boostForce/2);
-                    wantsToBlast = false;
                 }
 
                 if ((Input.GetKey(KeyCode.Space) && isGrounded == true && jumpOn == false && jumpRecharge <= 0) ||

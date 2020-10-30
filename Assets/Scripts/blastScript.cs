@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class blastScript : MonoBehaviour
 {
+    public GameObject player;
+
     public Rigidbody rb;
     public Rigidbody playerRb;
     public float blastRecharge;
@@ -17,9 +19,13 @@ public class blastScript : MonoBehaviour
 
     public obstacle_movement obstacleMovementScript;
 
+    private bool wantsToBlast = false;
+
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.Find("player");
+
         // turn off mesh renderer to make invisible when not in use
         GetComponent<MeshRenderer>().enabled = false;
 
@@ -31,6 +37,11 @@ public class blastScript : MonoBehaviour
         int obstacles = 1 << LayerMask.NameToLayer("obstacles");
         layermask = obstacles;
         maxRange = 20;
+    }
+
+    void Update()
+    {
+      wantsToBlast = player.GetComponent<Player_movement>().wantsToBlast;
     }
 
     // Update is called once per frame
@@ -58,7 +69,7 @@ public class blastScript : MonoBehaviour
         }
         blastRecharge -= Time.deltaTime;
 
-        if (Input.GetKey("s"))
+        if (Input.GetKey("s") || wantsToBlast)
         {
             if (blastOn == false)
             {
@@ -73,7 +84,8 @@ public class blastScript : MonoBehaviour
                     blastOn = true;
                 }
             }
-
+            
+            wantsToBlast = false;
         }
     }
 
