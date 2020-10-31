@@ -4,30 +4,39 @@ using UnityEngine;
 
 public class Swipe : MonoBehaviour
 {
+    public Camera gameCamera;
+    public GameObject player;
+
     private bool tapLeft, tapRight, swipeLeft, swipeRight, swipeUp, swipeDown;
     private bool tapRequested;
     private bool isDragging = false;
     private Vector2 startTouch, swipeDelta;
 
+    private Vector3 playerScreenPosition;
+
     private void Update()
     {
+        //playerScreenPosition = gameCamera.WorldToScreenPoint(player.transform.position);
+        //Debug.Log(playerScreenPosition);
+
         tapLeft = tapRight = swipeLeft = swipeRight = swipeUp = swipeDown = false;
 
-        #region Standalone Inputs
+        // Mouse controls
         if (Input.GetMouseButtonDown(0))
         {
             tapRequested = true;
             isDragging = true;
             startTouch = Input.mousePosition;
+            Debug.Log(startTouch);
         }
         else if (Input.GetMouseButtonUp(0))
         {
             if (tapRequested) {
-                if (Input.mousePosition.x > (Screen.width / 2))
+                if (Input.mousePosition.x > 3 * (Screen.width / 4))
                 {
                    // Debug.Log("Right");
                     tapRight = true;
-                } else if (Input.mousePosition.x < (Screen.width / 2))
+                } else if (Input.mousePosition.x < (Screen.width / 4))
                 {
                     tapLeft = true;
                 }
@@ -35,9 +44,8 @@ public class Swipe : MonoBehaviour
             isDragging = false;
             Reset();
         }
-        #endregion
 
-        #region Mobile Inputs
+        // Mobile/Touch controls
         if(Input.touchCount > 0)
         {
             if(Input.touches[0].phase == TouchPhase.Began)
@@ -62,7 +70,6 @@ public class Swipe : MonoBehaviour
                 Reset();
             }
         }
-        #endregion
 
         //Calculate the distance
         swipeDelta = Vector2.zero;
