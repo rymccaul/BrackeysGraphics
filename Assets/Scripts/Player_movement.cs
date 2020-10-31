@@ -81,6 +81,7 @@ public class Player_movement : MonoBehaviour
     public bool wantsToBlast = false;
 
     private bool wantsToJump;
+    private bool wantsToBoost;
     private bool wantsToMoveLeft;
     private bool wantsToMoveRight;
     private float screenWidth;
@@ -189,7 +190,7 @@ public class Player_movement : MonoBehaviour
           wantsToMoveRight = true;
 
       if (swipeControls.TapPlayer)
-          Debug.Log("Player tapped");
+          wantsToBoost = true;
     }
 
 
@@ -445,11 +446,12 @@ public class Player_movement : MonoBehaviour
                     }
                 }
 
-                if (Input.GetKey("w") && boostOn == false && boostRecharge <= 0)
+                if ((Input.GetKey("w") || wantsToBoost) && boostOn == false && boostRecharge <= 0)
                 {
                     boostOn = true;
                     boostCounter = 1f;
                     rb.AddForce(0, 0, boostForce/2);
+                    wantsToBoost = false;
                 }
 
                 if ((Input.GetKey(KeyCode.Space) && isGrounded == true && jumpOn == false && jumpRecharge <= 0) ||
