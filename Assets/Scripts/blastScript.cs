@@ -74,10 +74,10 @@ public class blastScript : MonoBehaviour
 
         if (Input.GetKey("s") || playerScript.wantsToBlast)
         {
-            Debug.Log("Input received");
+            // Debug.Log("Input received");
             if (blastOn == false)
             {
-                Debug.Log("blast false, blastRecharge:" + playerScript.blastRecharge);
+                // Debug.Log("blast false, blastRecharge:" + playerScript.blastRecharge);
                 if (playerScript.blastRecharge < 0)
                 {
                     GetComponent<MeshRenderer>().enabled = true;

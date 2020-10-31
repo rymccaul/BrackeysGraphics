@@ -7,26 +7,33 @@ public class Swipe : MonoBehaviour
     public Camera gameCamera;
     public GameObject player;
 
-    private bool tapLeft, tapRight, tapPlayer, swipeLeft, swipeRight, swipeUp, swipeDown;
+    private bool tapLeft, tapRight, tapPlayer, holdLeft, holdRight, swipeLeft,
+                                                swipeRight, swipeUp, swipeDown;
     private bool tapRequested;
-    private bool isDragging = false;
+    //private bool isDragging = false;
+    private bool isHolding = false;
     private Vector2 startTouch, swipeDelta;
 
     private Vector3 playerScreenPosition;
+
+    private float timeAtTouchDown;
+    private float timeNow;
 
     private void Update()
     {
         //playerScreenPosition = gameCamera.WorldToScreenPoint(player.transform.position);
         //Debug.Log(playerScreenPosition);
 
-        tapLeft = tapRight = tapPlayer = swipeLeft = swipeRight = swipeUp = swipeDown = false;
+        tapLeft = tapRight = tapPlayer = holdLeft = holdRight = swipeLeft =
+                                    swipeRight = swipeUp = swipeDown = false;
 
         // Mouse controls
         if (Input.GetMouseButtonDown(0))
         {
             tapRequested = true;
-            isDragging = true;
+            isHolding = true;
             startTouch = Input.mousePosition;
+            timeAtTouchDown = Time.realtimeSinceStartup;
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -53,7 +60,6 @@ public class Swipe : MonoBehaviour
                     tapLeft = true;
                 }
             }
-            isDragging = false;
             Reset();
         }
 
@@ -63,7 +69,7 @@ public class Swipe : MonoBehaviour
             if(Input.touches[0].phase == TouchPhase.Began)
             {
                 tapRequested = true;
-                isDragging = true;
+                isHolding= true;
                 startTouch = Input.touches[0].position;
             }
             else if (Input.touches[0].phase == TouchPhase.Ended || Input.touches[0].phase == TouchPhase.Canceled)
@@ -78,15 +84,15 @@ public class Swipe : MonoBehaviour
                         tapLeft = true;
                     }
                 }
-                isDragging = false;
                 Reset();
             }
         }
 
         //Calculate the distance
         swipeDelta = Vector2.zero;
-        if (isDragging)
+        if (isHolding)
         {
+            // Check if mouse or touch is dragging
             if(Input.touchCount > 0) { swipeDelta = Input.touches[0].position - startTouch; }
             else if (Input.GetMouseButton(0)) { swipeDelta = (Vector2)Input.mousePosition - startTouch; }
         }
@@ -114,12 +120,45 @@ public class Swipe : MonoBehaviour
             }
             Reset();
         }
+        else if (isHolding && (Time.realtimeSinceStartup - timeAtTouchDown > 0.1))
+        {
+            Debug.Log("Holding");
+            // If not swiping and has held down for more than x milliseconds
+            tapRequested = false;
+            if (Input.GetMouseButton(0)){
+              // Using mouse controls
+              if (Input.mousePosition.x > (Screen.width / 2))
+              {
+                 // Debug.Log("Right");
+                  holdRight = true;
+              }
+              else if (Input.mousePosition.x < (Screen.width / 2))
+              {
+                  holdLeft = true;
+              }
+            }
+
+            // Using touch controls
+            if(Input.touchCount > 0)
+            {
+              if (Input.touches[0].position.x > (Screen.width / 2))
+              {
+                 // Debug.Log("Right");
+                  holdRight = true;
+              } else if (Input.touches[0].position.x < (Screen.width / 2))
+              {
+                  holdLeft = true;
+              }
+            }
+        }
+
+        //Debug.Log(Time.realtimeSinceStartup - timeAtTouchDown);
     }
 
     private void Reset()
     {
         startTouch = swipeDelta = Vector2.zero;
-        isDragging = false;
+        isHolding = false;
     }
 
     public Vector2 SwipeDelta { get { return swipeDelta; } }
@@ -130,4 +169,6 @@ public class Swipe : MonoBehaviour
     public bool TapLeft { get { return tapLeft; } }
     public bool TapRight { get { return tapRight; } }
     public bool TapPlayer { get { return tapPlayer; } }
+    public bool HoldLeft { get { return holdLeft; } }
+    public bool HoldRight { get { return holdRight; } }
 }

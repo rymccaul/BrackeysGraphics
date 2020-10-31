@@ -177,7 +177,7 @@ public class Player_movement : MonoBehaviour
 
       if (swipeControls.SwipeDown && blastRecharge < 0 && blastOn == false){
           wantsToBlast = true;
-          Debug.Log("Swiped down");
+          //Debug.Log("Swiped down");
       }
 
       if (swipeControls.SwipeUp && boostRecharge < 0 && jumpOn == false)
@@ -258,7 +258,7 @@ public class Player_movement : MonoBehaviour
 
         if (Input.GetKey("s") || wantsToBlast)
         {
-            Debug.Log("Input registered - player movement, blast Recharge: " + blastRecharge);
+            // Debug.Log("Input registered - player movement, blast Recharge: " + blastRecharge);
             if (blastRecharge < 0)
             {
                 if (blastOn == false)
