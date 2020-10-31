@@ -174,12 +174,12 @@ public class Player_movement : MonoBehaviour
       // wants
 
 
-      if (swipeControls.SwipeDown && blastRecharge <= 0){
+      if (swipeControls.SwipeDown && blastRecharge < 0 && blastOn == false){
           wantsToBlast = true;
           Debug.Log("Swiped down");
       }
 
-      if (swipeControls.SwipeUp && boostRecharge <= 0)
+      if (swipeControls.SwipeUp && boostRecharge < 0 && jumpOn == false)
           wantsToJump = true;
 
       if (swipeControls.TapLeft)

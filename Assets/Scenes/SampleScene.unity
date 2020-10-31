@@ -207,7 +207,7 @@ MonoBehaviour:
   - {fileID: 4664856459876892218, guid: 1d04fbfc00bf1e346a67fa4e4fb2a6fb, type: 3}
   - {fileID: 4664856459876892218, guid: a86d1ef64f9977443a7199edca6a3824, type: 3}
   - {fileID: 4664856459876892218, guid: d7d88dea5e320424b98aa8543dcda7c9, type: 3}
-  traffic_count: 0
+  traffic_count: 15
 --- !u!114 &23369440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,9 +272,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a960af8ae8a17a418138a3efe9112bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   rb: {fileID: 198921597}
   playerRb: {fileID: 904389569}
-  blastRecharge: 0
   blastOn: 0
   maxRange: 0
   maxScale: {x: 0, y: 0, z: 0}
@@ -1445,6 +1445,7 @@ MonoBehaviour:
   blastForce: 0
   radius: 0
   blastCentre: {x: 0, y: 0, z: 0}
+  wantsToBlast: 0
 --- !u!114 &904389571
 MonoBehaviour:
   m_ObjectHideFlags: 0
