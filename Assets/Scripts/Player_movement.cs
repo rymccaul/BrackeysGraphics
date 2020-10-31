@@ -187,6 +187,9 @@ public class Player_movement : MonoBehaviour
 
       if (swipeControls.TapRight)
           wantsToMoveRight = true;
+
+      if (swipeControls.TapPlayer)
+          Debug.Log("Player tapped");
     }
 
 

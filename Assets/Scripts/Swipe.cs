@@ -7,7 +7,7 @@ public class Swipe : MonoBehaviour
     public Camera gameCamera;
     public GameObject player;
 
-    private bool tapLeft, tapRight, swipeLeft, swipeRight, swipeUp, swipeDown;
+    private bool tapLeft, tapRight, tapPlayer, swipeLeft, swipeRight, swipeUp, swipeDown;
     private bool tapRequested;
     private bool isDragging = false;
     private Vector2 startTouch, swipeDelta;
@@ -19,7 +19,7 @@ public class Swipe : MonoBehaviour
         //playerScreenPosition = gameCamera.WorldToScreenPoint(player.transform.position);
         //Debug.Log(playerScreenPosition);
 
-        tapLeft = tapRight = swipeLeft = swipeRight = swipeUp = swipeDown = false;
+        tapLeft = tapRight = tapPlayer = swipeLeft = swipeRight = swipeUp = swipeDown = false;
 
         // Mouse controls
         if (Input.GetMouseButtonDown(0))
@@ -27,16 +27,28 @@ public class Swipe : MonoBehaviour
             tapRequested = true;
             isDragging = true;
             startTouch = Input.mousePosition;
-            Debug.Log(startTouch);
         }
         else if (Input.GetMouseButtonUp(0))
         {
             if (tapRequested) {
-                if (Input.mousePosition.x > 3 * (Screen.width / 4))
+                // If tapped position is within 50 pixels of the center of player
+                // position, register as center/boost tap instead of lane change
+                // tap.
+                playerScreenPosition = gameCamera.WorldToScreenPoint(player.transform.position);
+
+                if (Input.mousePosition.x > playerScreenPosition.x - 25
+                        && Input.mousePosition.x < playerScreenPosition.x + 25
+                        && Input.mousePosition.y > playerScreenPosition.y - 25
+                        && Input.mousePosition.y < playerScreenPosition.y + 25)
+                {
+                    tapPlayer = true;
+                }
+                else if (Input.mousePosition.x > (Screen.width / 2))
                 {
                    // Debug.Log("Right");
                     tapRight = true;
-                } else if (Input.mousePosition.x < (Screen.width / 4))
+                }
+                else if (Input.mousePosition.x < (Screen.width / 2))
                 {
                     tapLeft = true;
                 }
@@ -117,4 +129,5 @@ public class Swipe : MonoBehaviour
     public bool SwipeDown { get { return swipeDown; } }
     public bool TapLeft { get { return tapLeft; } }
     public bool TapRight { get { return tapRight; } }
+    public bool TapPlayer { get { return tapPlayer; } }
 }
