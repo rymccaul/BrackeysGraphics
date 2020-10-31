@@ -78,7 +78,7 @@ public class Player_movement : MonoBehaviour
     public Vector3 blastCentre;
 
     // Mobile Touch specific variables
-    public bool wantsToBlast;
+    public bool wantsToBlast = false;
 
     private bool wantsToJump;
     private bool wantsToMoveLeft;
@@ -174,8 +174,10 @@ public class Player_movement : MonoBehaviour
       // wants
 
 
-      if (swipeControls.SwipeDown && blastRecharge <= 0)
+      if (swipeControls.SwipeDown && blastRecharge <= 0){
           wantsToBlast = true;
+          Debug.Log("Swiped down");
+      }
 
       if (swipeControls.SwipeUp && boostRecharge <= 0)
           wantsToJump = true;
@@ -252,6 +254,7 @@ public class Player_movement : MonoBehaviour
 
         if (Input.GetKey("s") || wantsToBlast)
         {
+            Debug.Log("Input registered - player movement, blast Recharge: " + blastRecharge);
             if (blastRecharge < 0)
             {
                 if (blastOn == false)
@@ -260,7 +263,7 @@ public class Player_movement : MonoBehaviour
                     blastCentre.z += 10f;
                     blastOn = true;
                     blastRecharge = 2;
-                    wantsToBlast = false;
+                    //wantsToBlast = false;
                     /*
                     Collider[] blastRadius = Physics.OverlapSphere(blastCentre, radius, layermask);
                     foreach (Collider hit in blastRadius)
