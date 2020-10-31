@@ -32,10 +32,13 @@ public class frontHingeAnchorScript : MonoBehaviour
 
     public float xMoveMultiplier;
 
+    private Player_movement playerScript;
+
     // Start is called before the first frame update
     void Start()
     {
         letsMove = false;
+        playerScript = player.GetComponent<Player_movement>();
     }
 
     // Update is called once per frame
@@ -89,7 +92,7 @@ public class frontHingeAnchorScript : MonoBehaviour
             }
 
 
-            if (Input.GetKey("d") && readyForInput == true)
+            if ((Input.GetKey("d") || playerScript.holdingRight) && readyForInput == true)
             {
                 hingeLane = playerMovementScript.hingedestinationlane;
                 hingeLane++;
@@ -101,7 +104,7 @@ public class frontHingeAnchorScript : MonoBehaviour
                 playerMovementScript.swerveRecoveryFactor = 3;
             }
 
-            if (Input.GetKey("a") && readyForInput == true)
+            if ((Input.GetKey("a") || playerScript.holdingLeft) && readyForInput == true)
             {
                 hingeLane = playerMovementScript.hingedestinationlane;
                 hingeLane--;
@@ -190,7 +193,7 @@ public class frontHingeAnchorScript : MonoBehaviour
                 rb.MovePosition(target);
             }
 
-            
+
 
             /*
             // move left or right with interpolated rb.MovePosition
@@ -227,7 +230,7 @@ public class frontHingeAnchorScript : MonoBehaviour
             }
             */
 
-            
+
             // move left or right by setting x position directly
             /*
             if (leftOrRight == 1)
@@ -260,7 +263,7 @@ public class frontHingeAnchorScript : MonoBehaviour
                 }
             }
             */
-            
+
             // move backwards or forwards with interpolated rb.MovePosition
             /*
             if (slowOrFastCrash == -1)
@@ -355,7 +358,7 @@ public class frontHingeAnchorScript : MonoBehaviour
 
         rb.transform.SetParent(player.transform);
 
-        
+
 
         //Vector3 resetPlayerVel = playerRb.velocity;
         //resetPlayerVel.z = playerZvel;

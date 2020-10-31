@@ -84,6 +84,10 @@ public class Player_movement : MonoBehaviour
     private bool wantsToBoost;
     private bool wantsToMoveLeft;
     private bool wantsToMoveRight;
+
+    public bool holdingLeft;
+    public bool holdingRight;
+
     private float screenWidth;
 
     // Start is called before the first frame update
@@ -191,6 +195,17 @@ public class Player_movement : MonoBehaviour
 
       if (swipeControls.TapPlayer)
           wantsToBoost = true;
+
+      if (swipeControls.HoldLeft)
+        holdingLeft = true;
+      else
+        holdingLeft = false;
+
+      if (swipeControls.HoldRight)
+        holdingRight = true;
+      else
+        holdingRight = false;
+
     }
 
 
@@ -198,7 +213,6 @@ public class Player_movement : MonoBehaviour
 
     void FixedUpdate()
     {
-
         // fix post-crash z velocity
         if (postCrashZvelFix == true)
         {
@@ -320,13 +334,13 @@ public class Player_movement : MonoBehaviour
                         rb.AddForce(-crashXvelocity * 100f * Time.deltaTime, 0, 0);
                     }
 
-                    if (Input.GetKey("d") || wantsToMoveRight)
+                    if (Input.GetKey("d") || holdingRight)
                     {
                         rb.AddForce(turnspeed * Time.deltaTime *1.5f, 0, 0);
                         wantsToMoveRight = false;
                     }
 
-                    if (Input.GetKey("a") || wantsToMoveLeft)
+                    if (Input.GetKey("a") || holdingLeft)
                     {
                         rb.AddForce(-turnspeed * Time.deltaTime * 1.5f, 0, 0);
                         wantsToMoveLeft = false;
@@ -427,7 +441,7 @@ public class Player_movement : MonoBehaviour
                         rb.velocity = jumpXSpeedLimit;
                     }
 
-                    if (Input.GetKey("d") || (wantsToMoveRight))
+                    if (Input.GetKey("d") || (holdingRight))
                     {
                         if (rb.velocity.x < 5)
                         {
@@ -436,7 +450,7 @@ public class Player_movement : MonoBehaviour
                         wantsToMoveRight = false;
                     }
 
-                    if (Input.GetKey("a") || (wantsToMoveLeft))
+                    if (Input.GetKey("a") || (holdingLeft))
                     {
                         if (rb.velocity.x > -5)
                         {

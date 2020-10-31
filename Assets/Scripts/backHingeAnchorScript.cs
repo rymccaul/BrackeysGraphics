@@ -31,10 +31,13 @@ public class backHingeAnchorScript : MonoBehaviour
 
     public float xMoveMultiplier;
 
+    private Player_movement playerScript;
+
     // Start is called before the first frame update
     void Start()
     {
         letsMove = false;
+        playerScript = player.GetComponent<Player_movement>();
     }
 
     // Update is called once per frame
@@ -86,7 +89,7 @@ public class backHingeAnchorScript : MonoBehaviour
                 rb.transform.rotation = Quaternion.Euler(0, 180, 0);
             }
 
-            if (Input.GetKey("d") && readyForInput == true)
+            if ((Input.GetKey("d") || playerScript.holdingRight) && readyForInput == true)
             {
                 hingeLane = playerMovementScript.hingedestinationlane;
                 hingeLane++;
@@ -98,7 +101,7 @@ public class backHingeAnchorScript : MonoBehaviour
                 playerMovementScript.swerveRecoveryFactor = 3f;
             }
 
-            if (Input.GetKey("a") && readyForInput == true)
+            if ((Input.GetKey("a") || playerScript.holdingLeft) && readyForInput == true)
             {
                 hingeLane = playerMovementScript.hingedestinationlane;
                 hingeLane--;
@@ -145,7 +148,7 @@ public class backHingeAnchorScript : MonoBehaviour
             */
 
 
-            
+
             if (leftOrRight == 1)
             {
                 if (pos.x < xTarget)
@@ -184,7 +187,7 @@ public class backHingeAnchorScript : MonoBehaviour
                     //readyForInput = true;
                 }
             }
-            
+
 
             if (slowOrFastCrash == -1)
             {
@@ -274,7 +277,7 @@ public class backHingeAnchorScript : MonoBehaviour
                 {
                     clockwiseOrAnti = 0;
                 }
-                
+
             }
             else if (clockwiseOrAnti == 0)
             {
@@ -318,7 +321,7 @@ public class backHingeAnchorScript : MonoBehaviour
         {
             slowOrFastCrash = 1;
         }
-        
+
         if (rb.transform.position.x > player.transform.position.x)
         {
             leftOrRight = -1;
@@ -348,7 +351,7 @@ public class backHingeAnchorScript : MonoBehaviour
 
         rb.transform.SetParent(player.transform);
 
-        
+
 
         //transform.position = player.transform.forward * -1f;
 

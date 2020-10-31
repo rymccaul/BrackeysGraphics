@@ -21,9 +21,6 @@ public class Swipe : MonoBehaviour
 
     private void Update()
     {
-        //playerScreenPosition = gameCamera.WorldToScreenPoint(player.transform.position);
-        //Debug.Log(playerScreenPosition);
-
         tapLeft = tapRight = tapPlayer = holdLeft = holdRight = swipeLeft =
                                     swipeRight = swipeUp = swipeDown = false;
 
@@ -52,7 +49,6 @@ public class Swipe : MonoBehaviour
                 }
                 else if (Input.mousePosition.x > (Screen.width / 2))
                 {
-                   // Debug.Log("Right");
                     tapRight = true;
                 }
                 else if (Input.mousePosition.x < (Screen.width / 2))
@@ -77,7 +73,6 @@ public class Swipe : MonoBehaviour
                 if (tapRequested) {
                     if (Input.touches[0].position.x > (Screen.width / 2))
                     {
-                       // Debug.Log("Right");
                         tapRight = true;
                     } else if (Input.touches[0].position.x < (Screen.width / 2))
                     {
@@ -122,14 +117,13 @@ public class Swipe : MonoBehaviour
         }
         else if (isHolding && (Time.realtimeSinceStartup - timeAtTouchDown > 0.1))
         {
-            Debug.Log("Holding");
+            // Debug.Log("Holding");
             // If not swiping and has held down for more than x milliseconds
             tapRequested = false;
             if (Input.GetMouseButton(0)){
               // Using mouse controls
               if (Input.mousePosition.x > (Screen.width / 2))
               {
-                 // Debug.Log("Right");
                   holdRight = true;
               }
               else if (Input.mousePosition.x < (Screen.width / 2))
@@ -143,9 +137,9 @@ public class Swipe : MonoBehaviour
             {
               if (Input.touches[0].position.x > (Screen.width / 2))
               {
-                 // Debug.Log("Right");
                   holdRight = true;
-              } else if (Input.touches[0].position.x < (Screen.width / 2))
+              }
+              else if (Input.touches[0].position.x < (Screen.width / 2))
               {
                   holdLeft = true;
               }

@@ -207,7 +207,7 @@ MonoBehaviour:
   - {fileID: 4664856459876892218, guid: 1d04fbfc00bf1e346a67fa4e4fb2a6fb, type: 3}
   - {fileID: 4664856459876892218, guid: a86d1ef64f9977443a7199edca6a3824, type: 3}
   - {fileID: 4664856459876892218, guid: d7d88dea5e320424b98aa8543dcda7c9, type: 3}
-  traffic_count: 0
+  traffic_count: 10
 --- !u!114 &23369440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1446,6 +1446,8 @@ MonoBehaviour:
   radius: 0
   blastCentre: {x: 0, y: 0, z: 0}
   wantsToBlast: 0
+  holdingLeft: 0
+  holdingRight: 0
 --- !u!114 &904389571
 MonoBehaviour:
   m_ObjectHideFlags: 0
