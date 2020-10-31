@@ -46,8 +46,8 @@ public class road_1_movement : MonoBehaviour
         {
             /*Debug.Log("pos: " + pos.ToString() + ", condition: " +
             (player_pos -(scale/2) - 15).ToString() + ", player: "
-              + player_pos.ToString() + ", scale: " + scale.ToString());
-            other_road_pos = GameObject.Find("road 2").transform.position.z;*/
+              + player_pos.ToString() + ", scale: " + scale.ToString());*/
+            other_road_pos = GameObject.Find("road 2").transform.position.z;
             transform.position = new Vector3(0, 0, (other_road_pos + (other_road_scale / 2) + (scale / 2)));
         }
         transform.position += velocity * Time.deltaTime;

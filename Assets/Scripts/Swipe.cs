@@ -35,15 +35,15 @@ public class Swipe : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             if (tapRequested) {
-                // If tapped position is within 50 pixels of the center of player
+                // If tapped position is within 100 pixels of the center of player
                 // position, register as center/boost tap instead of lane change
                 // tap.
                 playerScreenPosition = gameCamera.WorldToScreenPoint(player.transform.position);
 
-                if (Input.mousePosition.x > playerScreenPosition.x - 25
-                        && Input.mousePosition.x < playerScreenPosition.x + 25
-                        && Input.mousePosition.y > playerScreenPosition.y - 25
-                        && Input.mousePosition.y < playerScreenPosition.y + 25)
+                if (Input.mousePosition.x > playerScreenPosition.x - 50
+                        && Input.mousePosition.x < playerScreenPosition.x + 50
+                        && Input.mousePosition.y > playerScreenPosition.y - 50
+                        && Input.mousePosition.y < playerScreenPosition.y + 50)
                 {
                     tapPlayer = true;
                 }
@@ -71,10 +71,23 @@ public class Swipe : MonoBehaviour
             else if (Input.touches[0].phase == TouchPhase.Ended || Input.touches[0].phase == TouchPhase.Canceled)
             {
                 if (tapRequested) {
-                    if (Input.touches[0].position.x > (Screen.width / 2))
+                    // If tapped position is within 100 pixels of the center of player
+                    // position, register as center/boost tap instead of lane change
+                    // tap.
+                    playerScreenPosition = gameCamera.WorldToScreenPoint(player.transform.position);
+
+                    if(Input.touches[0].position.x > playerScreenPosition.x - 50
+                        && Input.touches[0].position.x < playerScreenPosition.x + 50
+                        && Input.touches[0].position.y > playerScreenPosition.y - 50
+                        && Input.touches[0].position.y < playerScreenPosition.y + 50)
+                    {
+                        tapPlayer = true;
+                    }
+                    else if (Input.touches[0].position.x > (Screen.width / 2))
                     {
                         tapRight = true;
-                    } else if (Input.touches[0].position.x < (Screen.width / 2))
+                    }
+                    else if (Input.touches[0].position.x < (Screen.width / 2))
                     {
                         tapLeft = true;
                     }
@@ -115,7 +128,7 @@ public class Swipe : MonoBehaviour
             }
             Reset();
         }
-        else if (isHolding && (Time.realtimeSinceStartup - timeAtTouchDown > 0.1))
+        else if (isHolding && (Time.realtimeSinceStartup - timeAtTouchDown > 0.3))
         {
             // Debug.Log("Holding");
             // If not swiping and has held down for more than x milliseconds

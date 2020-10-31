@@ -184,17 +184,17 @@ public class Player_movement : MonoBehaviour
           //Debug.Log("Swiped down");
       }
 
-      if (swipeControls.SwipeUp && boostRecharge < 0 && jumpOn == false)
+      if (swipeControls.SwipeUp && jumpRecharge < 0 && jumpOn == false)
           wantsToJump = true;
+
+      if (swipeControls.TapPlayer && boostRecharge < 0 && boostOn == false)
+          wantsToBoost = true;
 
       if (swipeControls.TapLeft)
           wantsToMoveLeft = true;
 
       if (swipeControls.TapRight)
           wantsToMoveRight = true;
-
-      if (swipeControls.TapPlayer)
-          wantsToBoost = true;
 
       if (swipeControls.HoldLeft)
         holdingLeft = true;
