@@ -207,7 +207,7 @@ MonoBehaviour:
   - {fileID: 4664856459876892218, guid: 1d04fbfc00bf1e346a67fa4e4fb2a6fb, type: 3}
   - {fileID: 4664856459876892218, guid: a86d1ef64f9977443a7199edca6a3824, type: 3}
   - {fileID: 4664856459876892218, guid: d7d88dea5e320424b98aa8543dcda7c9, type: 3}
-  traffic_count: 20
+  traffic_count: 10
 --- !u!114 &23369440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,9 +272,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a960af8ae8a17a418138a3efe9112bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   rb: {fileID: 198921597}
   playerRb: {fileID: 904389569}
-  blastRecharge: 0
   blastOn: 0
   maxRange: 0
   maxScale: {x: 0, y: 0, z: 0}
@@ -328,7 +328,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 3cf5d36f794391742b24814913cbef3a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1273,6 +1273,7 @@ GameObject:
   - component: {fileID: 904389565}
   - component: {fileID: 904389569}
   - component: {fileID: 904389570}
+  - component: {fileID: 904389571}
   m_Layer: 12
   m_Name: player
   m_TagString: Player
@@ -1385,6 +1386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c2d9ac8dc6584047b4631dee51b4914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  swipeControls: {fileID: 904389571}
   rb: {fileID: 904389569}
   startpos_x: 0
   startpos_y: 1
@@ -1443,6 +1445,23 @@ MonoBehaviour:
   blastForce: 0
   radius: 0
   blastCentre: {x: 0, y: 0, z: 0}
+  wantsToBlast: 0
+  holdingLeft: 0
+  holdingRight: 0
+--- !u!114 &904389571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904389564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 798c436252c3db34aa95368fa46c565e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameCamera: {fileID: 963194227}
+  player: {fileID: 904389564}
 --- !u!4 &927962095 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 2c79309c6bdc55b4eba32f63ec7777ba,
@@ -1665,6 +1684,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1972,6 +1992,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2637,6 +2658,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2807,6 +2829,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []

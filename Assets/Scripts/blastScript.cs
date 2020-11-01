@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class blastScript : MonoBehaviour
 {
+    public GameObject player;
+
     public Rigidbody rb;
     public Rigidbody playerRb;
-    public float blastRecharge;
+    private Player_movement playerScript;
     public bool blastOn;
     private int layermask;
     public float maxRange;
@@ -17,9 +19,13 @@ public class blastScript : MonoBehaviour
 
     public obstacle_movement obstacleMovementScript;
 
+    //private bool wantsToBlast = false;
+
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.Find("player");
+
         // turn off mesh renderer to make invisible when not in use
         GetComponent<MeshRenderer>().enabled = false;
 
@@ -27,10 +33,18 @@ public class blastScript : MonoBehaviour
         minScale = new Vector3(1.5f, 1, 1);
         maxScale = new Vector3(3, 1, 1);
         rb.transform.localScale = minScale;
-        blastRecharge = 0;
         int obstacles = 1 << LayerMask.NameToLayer("obstacles");
         layermask = obstacles;
         maxRange = 20;
+
+        playerScript = player.GetComponent<Player_movement>();
+        playerScript.blastRecharge = 0;
+    }
+
+    void Update()
+    {
+      //playerScript = player.GetComponent<Player_movement>();
+      //wantsToBlast = player.GetComponent<Player_movement>().wantsToBlast;
     }
 
     // Update is called once per frame
@@ -56,23 +70,27 @@ public class blastScript : MonoBehaviour
                 rb.transform.localScale = interpolatedScale;
             }
         }
-        blastRecharge -= Time.deltaTime;
+        //blastRecharge -= Time.deltaTime;
 
-        if (Input.GetKey("s"))
+        if (Input.GetKey("s") || playerScript.wantsToBlast)
         {
+            // Debug.Log("Input received");
             if (blastOn == false)
             {
-                if (blastRecharge < 0)
+                // Debug.Log("blast false, blastRecharge:" + playerScript.blastRecharge);
+                if (playerScript.blastRecharge < 0)
                 {
                     GetComponent<MeshRenderer>().enabled = true;
                     Vector3 playerPos = playerRb.transform.position;
                     startPosZ = playerPos.z;
                     Vector3 playerVel = playerRb.velocity;
                     Blast(playerPos, playerVel);
-                    blastRecharge = 2;
+                    playerScript.blastRecharge = 2;
                     blastOn = true;
+                    playerScript.wantsToBlast = false;
                 }
             }
+
 
         }
     }
