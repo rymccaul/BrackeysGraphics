@@ -117,7 +117,7 @@ public class blastScript : MonoBehaviour
         Vector3 otherPos = other.transform.position;
         float zdist = otherPos.z - startPosZ;
         float xdist = otherPos.x - rb.transform.position.x;
-        Debug.Log("We hit " + other.name + " at: " + xdist + " (x), " + zdist + " (z).");
+        //Debug.Log("We hit " + other.name + " at: " + xdist + " (x), " + zdist + " (z).");
 
         Vector3 blastForce;
         //blastForce.z = 10000 / zdist;

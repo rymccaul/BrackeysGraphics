@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class UI_pauseScript : MonoBehaviour
 {
-    private bool isPaused = false;
+    public GameObject pauseMenu;
+    public static bool isPaused = false;
 
     void Update(){
       if(Input.GetKeyDown(KeyCode.Escape))
@@ -15,12 +16,10 @@ public class UI_pauseScript : MonoBehaviour
     public void clickPauseButton()
     {
         if (isPaused){
-            Debug.Log("Unpaused.");
             resume();
         }
         else
         {
-            Debug.Log("Paused.");
             pause();
         }
 
@@ -29,11 +28,15 @@ public class UI_pauseScript : MonoBehaviour
 
     private void resume(){
       isPaused = false;
+      pauseMenu.SetActive(false);
+      Time.timeScale = 1f;
       return;
     }
 
     private void pause(){
       isPaused = true;
+      pauseMenu.SetActive(true);
+      Time.timeScale = 0f;
       return;
     }
 }

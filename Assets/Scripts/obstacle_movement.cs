@@ -598,7 +598,7 @@ public class obstacle_movement : MonoBehaviour
 
     public void Blasted()
     {
-        Debug.Log("Blasted works!");
+        //Debug.Log("Blasted works!");
         currentLane = destinationLane;
         rightLaneChangeSafe = false;
         leftLaneChangeSafe = false;
