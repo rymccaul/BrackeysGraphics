@@ -38,7 +38,7 @@ public class powerup_sphere_script : MonoBehaviour
     {
         player_movement_script = player.GetComponent<Player_movement>();
 
-        boost_recharge = player_movement_script.boostRecharge;
+        boost_recharge = player_movement_script.boostBar;
         jump_recharge = player_movement_script.jumpRecharge;
         blast_recharge = player_movement_script.blastRecharge;
 

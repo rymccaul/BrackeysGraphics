@@ -20,7 +20,7 @@ public class UI_jump_bar : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        blastPercentage = blasterscript.blastRecharge;
+      //  blastPercentage = blasterscript.blastRecharge;
         if (blastPercentage < 0)
         {
             blastPercentage = 1;
