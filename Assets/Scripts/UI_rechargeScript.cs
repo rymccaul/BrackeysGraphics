@@ -30,7 +30,7 @@ public class UI_rechargeScript : MonoBehaviour
     {
         player_movement_script = player_obj.GetComponent<Player_movement>();
 
-        boost_recharge = player_movement_script.boostRecharge;
+        boost_recharge = player_movement_script.boostBar;    //boostRecharge;
         jump_recharge = player_movement_script.jumpRecharge;
         blast_recharge = player_movement_script.blastRecharge;
 

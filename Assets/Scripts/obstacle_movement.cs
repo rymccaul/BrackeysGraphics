@@ -50,6 +50,9 @@ public class obstacle_movement : MonoBehaviour
     public bool gotBlasted;
 
 
+    public material_controller material_chooser;
+
+
     // public GameObject[] numberOfObstacles;
 
     // Start is called before the first frame update
@@ -76,7 +79,9 @@ public class obstacle_movement : MonoBehaviour
 
         closeSensorScript = gameObject.GetComponentInChildren<sensor_script>();
 
-        GetComponent<Renderer>().material = defaultMat;
+        //GetComponent<Renderer>().material = defaultMat;
+        //material_chooser.brakeOn = false;
+        //material_chooser.leftOrRight = 0;
 
         closeSensorScript.sensorResizeX = 2f;
         closeSensorScript.sensorPosX = 0;
@@ -143,7 +148,9 @@ public class obstacle_movement : MonoBehaviour
                 rightLaneChangeSafe = false;
                 leftLaneChangeSafe = false;
 
-                GetComponent<Renderer>().material = defaultMat;
+                //GetComponent<Renderer>().material = defaultMat;
+                material_chooser.brakeOn = false;
+                material_chooser.leftOrRight = 0;
 
                 closeSensorScript.sensorResizeX = 2f;
                 closeSensorScript.sensorPosX = 0;
@@ -199,7 +206,8 @@ public class obstacle_movement : MonoBehaviour
                 closeSensorScript.sensorResizeX = 2f;
                 closeSensorScript.sensorPosX = 0;
 
-                GetComponent<Renderer>().material = defaultMat;
+                //GetComponent<Renderer>().material = defaultMat;
+                material_chooser.leftOrRight = 0;
             }
         }
         if (destinationLane < currentLane)
@@ -214,7 +222,8 @@ public class obstacle_movement : MonoBehaviour
                 closeSensorScript.sensorResizeX = 2f;
                 closeSensorScript.sensorPosX = 0;
 
-                GetComponent<Renderer>().material = defaultMat;
+                //GetComponent<Renderer>().material = defaultMat;
+                material_chooser.leftOrRight = 0;
             }
         }
     }
@@ -515,7 +524,8 @@ public class obstacle_movement : MonoBehaviour
                     closeSensorScript.sensorResizeX = 1.5f;
                     closeSensorScript.sensorPosX = 0.25f;
 
-                    GetComponent<Renderer>().material = turnSignal;
+                    //GetComponent<Renderer>().material = turnSignal;
+                    material_chooser.leftOrRight = 1;
 
                 }
                 else
@@ -528,7 +538,8 @@ public class obstacle_movement : MonoBehaviour
                         closeSensorScript.sensorResizeX = 1.5f;
                         closeSensorScript.sensorPosX = 0.25f;
 
-                        GetComponent<Renderer>().material = turnSignal;
+                        //GetComponent<Renderer>().material = turnSignal;
+                        material_chooser.leftOrRight = 1;
                     }
                     else if (rightTimeToCollision != leftTimeToCollision)
                     {
@@ -538,7 +549,8 @@ public class obstacle_movement : MonoBehaviour
                         closeSensorScript.sensorResizeX = 1.5f;
                         closeSensorScript.sensorPosX = -0.25f;
 
-                        GetComponent<Renderer>().material = turnSignal;
+                        //GetComponent<Renderer>().material = turnSignal;
+                        material_chooser.leftOrRight = -1;
                     }
                     else
                     {
@@ -551,7 +563,8 @@ public class obstacle_movement : MonoBehaviour
                             closeSensorScript.sensorResizeX = 1.5f;
                             closeSensorScript.sensorPosX = -0.25f;
 
-                            GetComponent<Renderer>().material = turnSignal;
+                            //GetComponent<Renderer>().material = turnSignal;
+                            material_chooser.leftOrRight = -1;
                         }
                         else
                         {
@@ -562,6 +575,7 @@ public class obstacle_movement : MonoBehaviour
                             closeSensorScript.sensorPosX = 0.25f;
 
                             GetComponent<Renderer>().material = turnSignal;
+                            material_chooser.leftOrRight = 1;
                         }
                     }
 
@@ -589,7 +603,8 @@ public class obstacle_movement : MonoBehaviour
                 destinationLane--;
                 rb.AddForce(-75, 0, 0);
 
-                GetComponent<Renderer>().material = turnSignal;
+                //GetComponent<Renderer>().material = turnSignal;
+                material_chooser.leftOrRight = -1;
                 //Debug.Break();
             }
 

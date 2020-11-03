@@ -37,8 +37,8 @@ public class Player_movement : MonoBehaviour
     public bool boostOn;
     public float boostForce;
     public float crashZvelocity;
-    public float boostCounter;
-    public float boostRecharge;
+    //public float boostCounter;
+    //public float boostRecharge;
 
     // this is the start of the hinge method
 
@@ -90,6 +90,12 @@ public class Player_movement : MonoBehaviour
 
     private float screenWidth;
 
+    // new boost method
+
+    public float boostBar;
+    public float boostRechargeRate;
+    public float boostConsumeRate;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -115,6 +121,9 @@ public class Player_movement : MonoBehaviour
 
         boostOn = false;
         boostForce = 500;
+        boostBar = 100f;
+        boostRechargeRate = 10;
+        boostConsumeRate = 50;
 
         postCrashZvelFix = false;
 
@@ -223,17 +232,39 @@ public class Player_movement : MonoBehaviour
 
         if (boostOn == true)
         {
-            rb.AddForce(0, 0, (boostForce/2) * Time.deltaTime);
+            boostBar -= Time.deltaTime * boostConsumeRate;
+            if (boostBar > 0)
+            {
+                rb.AddForce(0, 0, (boostForce/2) * Time.deltaTime);
+            }
+            else
+            {
+                boostBar = 0;
+                boostOn = false;
+            }
+            // this is the old boost method
+            /*
             boostCounter -= Time.deltaTime;
             if (boostCounter < 0)
             {
                 boostOn = false;
                 boostRecharge = 3f;
             }
+            */
         }
         else
         {
-            boostRecharge -= Time.deltaTime;
+            //boostRecharge -= Time.deltaTime;    // this is from the old boost method
+
+            if (boostBar >= 100f)
+            {
+                boostBar = 100f;
+            }
+            else
+            {
+                boostBar += Time.deltaTime * boostRechargeRate;
+            }
+
             float currentSpeed = rb.velocity.z;
 
             // Decay speed back to normal if not currently boosting
@@ -460,11 +491,14 @@ public class Player_movement : MonoBehaviour
                     }
                 }
 
-                if ((Input.GetKey("w") || wantsToBoost) && boostOn == false && boostRecharge <= 0)
+                if ((Input.GetKey("w") || wantsToBoost) && boostOn == false && boostBar > 0)
                 {
                     boostOn = true;
-                    boostCounter = 1f;
-                    rb.AddForce(0, 0, boostForce/2);
+                    //boostCounter = 1f;     // this is the old boost method
+                    if (boostBar > 30f)
+                    {
+                        rb.AddForce(0, 0, boostForce / 2);
+                    }
                     wantsToBoost = false;
                 }
 
@@ -548,7 +582,7 @@ public class Player_movement : MonoBehaviour
                         //rb.velocity = crashResetVel;
                         //rb.AddForce(0, 0, frontHingeScript.playerZvel);
                         rb.angularVelocity = Vector3.zero;
-                        boostRecharge = 0f;
+                        //boostRecharge = 0f;   this is the old boost method
                     }
                 }
             }
