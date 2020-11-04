@@ -4,70 +4,103 @@ using UnityEngine;
 
 public class Swipe : MonoBehaviour
 {
-    private bool tapLeft, tapRight, swipeLeft, swipeRight, swipeUp, swipeDown;
+    public Camera gameCamera;
+    public GameObject player;
+
+    private bool tapLeft, tapRight, tapPlayer, holdLeft, holdRight, swipeLeft,
+                                                swipeRight, swipeUp, swipeDown;
     private bool tapRequested;
-    private bool isDragging = false;
+    //private bool isDragging = false;
+    private bool isHolding = false;
     private Vector2 startTouch, swipeDelta;
+
+    private Vector3 playerScreenPosition;
+
+    private float timeAtTouchDown;
+    private float timeNow;
 
     private void Update()
     {
-        tapLeft = tapRight = swipeLeft = swipeRight = swipeUp = swipeDown = false;
+        tapLeft = tapRight = tapPlayer = holdLeft = holdRight = swipeLeft =
+                                    swipeRight = swipeUp = swipeDown = false;
 
-        #region Standalone Inputs
+        // Mouse controls
         if (Input.GetMouseButtonDown(0))
         {
             tapRequested = true;
-            isDragging = true;
+            isHolding = true;
             startTouch = Input.mousePosition;
+            timeAtTouchDown = Time.realtimeSinceStartup;
         }
         else if (Input.GetMouseButtonUp(0))
         {
             if (tapRequested) {
-                if (Input.mousePosition.x > (Screen.width / 2))
+                // If tapped position is within 100 pixels of the center of player
+                // position, register as center/boost tap instead of lane change
+                // tap.
+                playerScreenPosition = gameCamera.WorldToScreenPoint(player.transform.position);
+
+                if (Input.mousePosition.x > playerScreenPosition.x - 50
+                        && Input.mousePosition.x < playerScreenPosition.x + 50
+                        && Input.mousePosition.y > playerScreenPosition.y - 50
+                        && Input.mousePosition.y < playerScreenPosition.y + 50)
                 {
-                   // Debug.Log("Right");
+                    tapPlayer = true;
+                }
+                else if (Input.mousePosition.x > (Screen.width / 2))
+                {
                     tapRight = true;
-                } else if (Input.mousePosition.x < (Screen.width / 2))
+                }
+                else if (Input.mousePosition.x < (Screen.width / 2))
                 {
                     tapLeft = true;
                 }
             }
-            isDragging = false;
             Reset();
         }
-        #endregion
 
-        #region Mobile Inputs
+        // Mobile/Touch controls
         if(Input.touchCount > 0)
         {
             if(Input.touches[0].phase == TouchPhase.Began)
             {
                 tapRequested = true;
-                isDragging = true;
+                isHolding= true;
                 startTouch = Input.touches[0].position;
             }
             else if (Input.touches[0].phase == TouchPhase.Ended || Input.touches[0].phase == TouchPhase.Canceled)
             {
                 if (tapRequested) {
-                    if (Input.touches[0].position.x > (Screen.width / 2))
+                    // If tapped position is within 100 pixels of the center of player
+                    // position, register as center/boost tap instead of lane change
+                    // tap.
+                    playerScreenPosition = gameCamera.WorldToScreenPoint(player.transform.position);
+
+                    if(Input.touches[0].position.x > playerScreenPosition.x - 50
+                        && Input.touches[0].position.x < playerScreenPosition.x + 50
+                        && Input.touches[0].position.y > playerScreenPosition.y - 50
+                        && Input.touches[0].position.y < playerScreenPosition.y + 50)
                     {
-                       // Debug.Log("Right");
+                        tapPlayer = true;
+                    }
+                    else if (Input.touches[0].position.x > (Screen.width / 2))
+                    {
                         tapRight = true;
-                    } else if (Input.touches[0].position.x < (Screen.width / 2))
+                    }
+                    else if (Input.touches[0].position.x < (Screen.width / 2))
                     {
                         tapLeft = true;
                     }
                 }
-                isDragging = false;
                 Reset();
             }
         }
-        #endregion
 
         //Calculate the distance
         swipeDelta = Vector2.zero;
-        if (isDragging)
+        if (isHolding)
         {
+            // Check if mouse or touch is dragging
             if(Input.touchCount > 0) { swipeDelta = Input.touches[0].position - startTouch; }
             else if (Input.GetMouseButton(0)) { swipeDelta = (Vector2)Input.mousePosition - startTouch; }
         }
@@ -95,12 +128,44 @@ public class Swipe : MonoBehaviour
             }
             Reset();
         }
+        else if (isHolding && (Time.realtimeSinceStartup - timeAtTouchDown > 0.3))
+        {
+            // Debug.Log("Holding");
+            // If not swiping and has held down for more than x milliseconds
+            tapRequested = false;
+            if (Input.GetMouseButton(0)){
+              // Using mouse controls
+              if (Input.mousePosition.x > (Screen.width / 2))
+              {
+                  holdRight = true;
+              }
+              else if (Input.mousePosition.x < (Screen.width / 2))
+              {
+                  holdLeft = true;
+              }
+            }
+
+            // Using touch controls
+            if(Input.touchCount > 0)
+            {
+              if (Input.touches[0].position.x > (Screen.width / 2))
+              {
+                  holdRight = true;
+              }
+              else if (Input.touches[0].position.x < (Screen.width / 2))
+              {
+                  holdLeft = true;
+              }
+            }
+        }
+
+        //Debug.Log(Time.realtimeSinceStartup - timeAtTouchDown);
     }
 
     private void Reset()
     {
         startTouch = swipeDelta = Vector2.zero;
-        isDragging = false;
+        isHolding = false;
     }
 
     public Vector2 SwipeDelta { get { return swipeDelta; } }
@@ -110,4 +175,7 @@ public class Swipe : MonoBehaviour
     public bool SwipeDown { get { return swipeDown; } }
     public bool TapLeft { get { return tapLeft; } }
     public bool TapRight { get { return tapRight; } }
+    public bool TapPlayer { get { return tapPlayer; } }
+    public bool HoldLeft { get { return holdLeft; } }
+    public bool HoldRight { get { return holdRight; } }
 }
