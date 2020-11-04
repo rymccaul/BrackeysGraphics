@@ -49,6 +49,9 @@ public class sensor_script : MonoBehaviour
     public float maxSpeed;
 
 
+    public material_controller material_chooser;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -91,6 +94,7 @@ public class sensor_script : MonoBehaviour
             transform.localPosition = colpos;
             transform.localScale = new Vector3(sensorResizeX, 0.5f, 50f);
             otherUpdated = null;
+            material_chooser.brakeOn = false;
 
             if (parRb.velocity.z < -5f)
             {
@@ -260,12 +264,21 @@ public class sensor_script : MonoBehaviour
                     }
 
                     parRb.AddForce(0, 0, -brakeForce * Time.deltaTime);
+                    if (brakeForce > 0)
+                    {
+                        material_chooser.brakeOn = true;
+                    }
+                    else
+                    {
+                        material_chooser.brakeOn = false;
+                    }
 
                 }
                 else if (timeToCollision < -2f && parVelocity < maxSpeed)
                 {
                     accelerationForce = 100f;
                     parRb.AddForce(0, 0, accelerationForce * Time.deltaTime);
+                    material_chooser.brakeOn = false;
                 }
             }
         }
