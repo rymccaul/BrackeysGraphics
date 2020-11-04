@@ -196,7 +196,7 @@ public class Player_movement : MonoBehaviour
       if (swipeControls.SwipeUp && jumpRecharge < 0 && jumpOn == false)
           wantsToJump = true;
 
-      if (swipeControls.TapPlayer && boostRecharge < 0 && boostOn == false)
+      if (swipeControls.TapPlayer && boostBar < 0 && boostOn == false)
           wantsToBoost = true;
 
       if (swipeControls.TapLeft)
