@@ -78,8 +78,16 @@ public class Player_movement : MonoBehaviour
     public Vector3 blastCentre;
 
     // Mobile Touch specific variables
+    public bool wantsToBlast = false;
+
     private bool wantsToJump;
-    private bool wantsToBlast;
+    private bool wantsToBoost;
+    private bool wantsToMoveLeft;
+    private bool wantsToMoveRight;
+
+    public bool holdingLeft;
+    public bool holdingRight;
+
     private float screenWidth;
 
     // new boost method
@@ -173,23 +181,47 @@ public class Player_movement : MonoBehaviour
         }
     }
 
+    */
     void Update(){
+      // Move variables set to false to after the action has been executed, or
+      // for the powerups only if they were ready and executed. Else only set
+      // wants
+
+
+      if (swipeControls.SwipeDown && blastRecharge < 0 && blastOn == false){
+          wantsToBlast = true;
+          //Debug.Log("Swiped down");
+      }
+
+      if (swipeControls.SwipeUp && jumpRecharge < 0 && jumpOn == false)
+          wantsToJump = true;
+
+      if (swipeControls.TapPlayer && boostBar < 0 && boostOn == false)
+          wantsToBoost = true;
+
+      if (swipeControls.TapLeft)
+          wantsToMoveLeft = true;
+
+      if (swipeControls.TapRight)
+          wantsToMoveRight = true;
+
+      if (swipeControls.HoldLeft)
+        holdingLeft = true;
+      else
+        holdingLeft = false;
+
+      if (swipeControls.HoldRight)
+        holdingRight = true;
+      else
+        holdingRight = false;
 
     }
-    */
+
 
     // Update is called once per frame
 
     void FixedUpdate()
     {
-        wantsToJump = wantsToBlast = false;
-
-        if (swipeControls.SwipeDown)
-            wantsToBlast = true;
-
-        if (swipeControls.SwipeUp)
-            wantsToJump = true;
-
         // fix post-crash z velocity
         if (postCrashZvelFix == true)
         {
@@ -232,7 +264,7 @@ public class Player_movement : MonoBehaviour
             {
                 boostBar += Time.deltaTime * boostRechargeRate;
             }
-            
+
             float currentSpeed = rb.velocity.z;
 
             // Decay speed back to normal if not currently boosting
@@ -271,6 +303,7 @@ public class Player_movement : MonoBehaviour
 
         if (Input.GetKey("s") || wantsToBlast)
         {
+            // Debug.Log("Input registered - player movement, blast Recharge: " + blastRecharge);
             if (blastRecharge < 0)
             {
                 if (blastOn == false)
@@ -279,6 +312,7 @@ public class Player_movement : MonoBehaviour
                     blastCentre.z += 10f;
                     blastOn = true;
                     blastRecharge = 2;
+                    //wantsToBlast = false;
                     /*
                     Collider[] blastRadius = Physics.OverlapSphere(blastCentre, radius, layermask);
                     foreach (Collider hit in blastRadius)
@@ -288,7 +322,6 @@ public class Player_movement : MonoBehaviour
                         Debug.Log("We hit " + hit.name);
                     }
                     */
-
                 }
             }
         }
@@ -332,14 +365,16 @@ public class Player_movement : MonoBehaviour
                         rb.AddForce(-crashXvelocity * 100f * Time.deltaTime, 0, 0);
                     }
 
-                    if (Input.GetKey("d") || (swipeControls.TapRight))
+                    if (Input.GetKey("d") || holdingRight)
                     {
                         rb.AddForce(turnspeed * Time.deltaTime *1.5f, 0, 0);
+                        wantsToMoveRight = false;
                     }
 
-                    if (Input.GetKey("a") || (swipeControls.TapLeft))
+                    if (Input.GetKey("a") || holdingLeft)
                     {
                         rb.AddForce(-turnspeed * Time.deltaTime * 1.5f, 0, 0);
+                        wantsToMoveLeft = false;
                     }
                 }
                 else
@@ -408,17 +443,19 @@ public class Player_movement : MonoBehaviour
                 if (jumpOn == false)
                 {
 
-                    if ((Input.GetKey("d") || (swipeControls.TapRight))
+                    if ((Input.GetKey("d") || (wantsToMoveRight))
                                         && (currentlane == destinationlane))
                     {
                         destinationlane++;
                         rb.AddForce(turnspeed, 0, 0);
+                        wantsToMoveRight = false;
                     }
 
-                    if ((Input.GetKey("a") || (swipeControls.TapLeft)) && (currentlane == destinationlane))
+                    if ((Input.GetKey("a") || (wantsToMoveLeft)) && (currentlane == destinationlane))
                     {
                         destinationlane--;
                         rb.AddForce(-turnspeed, 0, 0);
+                        wantsToMoveLeft = false;
                     }
                 }
                 else
@@ -435,24 +472,26 @@ public class Player_movement : MonoBehaviour
                         rb.velocity = jumpXSpeedLimit;
                     }
 
-                    if (Input.GetKey("d") || (swipeControls.TapRight))
+                    if (Input.GetKey("d") || (holdingRight))
                     {
                         if (rb.velocity.x < 5)
                         {
                             rb.AddForce(turnspeed * Time.deltaTime * 1.0f, 0, 0);
                         }
+                        wantsToMoveRight = false;
                     }
 
-                    if (Input.GetKey("a") || (swipeControls.TapLeft))
+                    if (Input.GetKey("a") || (holdingLeft))
                     {
                         if (rb.velocity.x > -5)
                         {
                             rb.AddForce(-turnspeed * Time.deltaTime * 1.0f, 0, 0);
                         }
+                        wantsToMoveLeft = false;
                     }
                 }
 
-                if (Input.GetKey("w") && boostOn == false && boostBar > 0)
+                if ((Input.GetKey("w") || wantsToBoost) && boostOn == false && boostBar > 0)
                 {
                     boostOn = true;
                     //boostCounter = 1f;     // this is the old boost method
@@ -460,6 +499,7 @@ public class Player_movement : MonoBehaviour
                     {
                         rb.AddForce(0, 0, boostForce / 2);
                     }
+                    wantsToBoost = false;
                 }
 
                 if ((Input.GetKey(KeyCode.Space) && isGrounded == true && jumpOn == false && jumpRecharge <= 0) ||
@@ -471,6 +511,7 @@ public class Player_movement : MonoBehaviour
                     reduceXvel.x *= .25f;
                     rb.velocity = reduceXvel;
                     rb.AddForce(0, jumpForce, 0);
+                    wantsToJump = false;
                 }
 
             }
