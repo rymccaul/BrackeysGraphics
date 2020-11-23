@@ -232,6 +232,7 @@ GameObject:
   - component: {fileID: 23369439}
   - component: {fileID: 23369440}
   - component: {fileID: 23369441}
+  - component: {fileID: 23369442}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -336,6 +337,21 @@ MonoBehaviour:
   jump_sphere: {fileID: 858918590}
   boost_sphere: {fileID: 203547573}
   blast_sphere: {fileID: 1530832074}
+--- !u!114 &23369442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23369435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f0e368edab8d79408909d588daaf695, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tree_prefab_array:
+  - {fileID: 5800512653925921641, guid: fabfb46646460a244b28a2758529bf7b, type: 3}
+  treeCount: 15
 --- !u!1 &35599853
 GameObject:
   m_ObjectHideFlags: 0
