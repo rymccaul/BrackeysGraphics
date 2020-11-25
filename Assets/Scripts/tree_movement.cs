@@ -8,6 +8,7 @@ public class tree_movement : MonoBehaviour
     public GameObject player;
     private Vector3 treeSpeed;
     private Vector3 treePos;
+    private float playerZpos;
 
     // Start is called before the first frame update
     void Start()
@@ -24,18 +25,19 @@ public class tree_movement : MonoBehaviour
         treePos += (treeSpeed * Time.deltaTime);
 
         transform.position = treePos;
+        playerZpos = player.transform.position.z;
 
-        if (treePos.z < (player.transform.position.z - 10))
+        if (treePos.z < (playerZpos - 10))
         {
-            Respawn();
+            Respawn(playerZpos);
         }
     }
 
-    void Respawn()
+    void Respawn(float playerPosition)
     {
         int randomSign = Random.Range(0, 2);
         float randomX = Random.Range(15f, 25f) * ((randomSign - 0.5f) * 2);
 
-        transform.position = new Vector3(randomX, -1, 500);
+        transform.position = new Vector3(randomX, -1, 500 + playerPosition);
     }
 }
