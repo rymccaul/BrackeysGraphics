@@ -351,6 +351,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tree_prefab_array:
   - {fileID: 5800512653925921641, guid: fabfb46646460a244b28a2758529bf7b, type: 3}
+  - {fileID: 8457425987091445343, guid: 02d8380ab49fa3842ac83df3c5dcf68e, type: 3}
   treeCount: 15
 --- !u!1 &35599853
 GameObject:
