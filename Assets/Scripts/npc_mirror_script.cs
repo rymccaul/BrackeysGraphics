@@ -42,5 +42,14 @@ public class npc_mirror_script : MonoBehaviour
 
         // Set rotation to mimic original
         reflected_npc.transform.rotation = transform.rotation * relativeRotation;
+
+        if (reflected_npc.transform.position.x > 7.5 || reflected_npc.transform.position.x < -7.5)
+        {
+            reflected_npc.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = false;
+        }
+        else
+        {
+            reflected_npc.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = true;
+        }
     }
 }

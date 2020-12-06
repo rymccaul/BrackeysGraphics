@@ -43,5 +43,15 @@ public class player_mirror_script : MonoBehaviour
 
         // Set rotation to mimic original
         reflected_player.transform.rotation = player.transform.rotation * relativeRotation;
+
+
+        if (reflected_player.transform.position.x > 7.5 || reflected_player.transform.position.x < -7.5)
+        {
+            reflected_player.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = false;
+        }
+        else
+        {
+            reflected_player.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = true;
+        }
     }
 }
