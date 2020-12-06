@@ -22,7 +22,7 @@ public class UI_score_script : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         player_speed = speed_text_obj.GetComponent<UI_speedScript>()
                                                                 .player_speed;
