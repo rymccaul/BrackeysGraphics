@@ -9,6 +9,9 @@ public class player_mirror_script : MonoBehaviour
     private GameObject reflected_player;
     Quaternion relativeRotation;
 
+    private bool isOnRoad = true;
+    private bool meshRendererCurrentValue = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,11 +50,22 @@ public class player_mirror_script : MonoBehaviour
 
         if (reflected_player.transform.position.x > 7.5 || reflected_player.transform.position.x < -7.5)
         {
-            reflected_player.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = false;
+            isOnRoad = false;
         }
         else
         {
-            reflected_player.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = true;
+            isOnRoad = true;
+        }
+
+        setMeshRenderer();
+    }
+
+    void setMeshRenderer()
+    {
+        if (meshRendererCurrentValue != isOnRoad)
+        {
+            reflected_player.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = isOnRoad;
+            meshRendererCurrentValue = isOnRoad;
         }
     }
 }

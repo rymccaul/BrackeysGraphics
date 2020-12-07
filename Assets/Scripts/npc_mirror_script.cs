@@ -6,6 +6,9 @@ public class npc_mirror_script : MonoBehaviour
 {
     private GameObject reflected_npc;
     Quaternion relativeRotation;
+    
+    private bool isOnRoad = true;
+    private bool meshRendererCurrentValue = true;
 
     // Start is called before the first frame update
     void Start()
@@ -45,11 +48,20 @@ public class npc_mirror_script : MonoBehaviour
 
         if (reflected_npc.transform.position.x > 7.5 || reflected_npc.transform.position.x < -7.5)
         {
-            reflected_npc.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = false;
+            isOnRoad = false;
+        } else {
+            isOnRoad = true;
         }
-        else
+
+        setMeshRenderer();
+    }
+
+    void setMeshRenderer()
+    {
+        if (meshRendererCurrentValue != isOnRoad)
         {
-            reflected_npc.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = true;
+            reflected_npc.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = isOnRoad;
+            meshRendererCurrentValue = isOnRoad;
         }
     }
 }

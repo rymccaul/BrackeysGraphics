@@ -25,12 +25,9 @@ public class UI_FPSScript : MonoBehaviour
       if (timeNow > lastInterval + updateInterval)
       {
           fps = (float)(frames / (timeNow - lastInterval));
-          Debug.Log((timeNow - lastInterval).ToString() + ", " + frames.ToString());
           frames = 0;
           lastInterval = timeNow;
           FPS_text_obj.text = "FPS | " + fps.ToString();
       }
-
-
   }
 }

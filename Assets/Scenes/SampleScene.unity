@@ -3235,6 +3235,7 @@ MonoBehaviour:
   scale: 0
   other_road_scale: 0
   velocity: {x: 0, y: 0, z: 0}
+  other_road: {fileID: 1743088236}
 --- !u!1 &1580608628
 GameObject:
   m_ObjectHideFlags: 0
@@ -3975,6 +3976,7 @@ MonoBehaviour:
   scale: 0
   other_road_scale: 0
   velocity: {x: 0, y: 0, z: 0}
+  other_road: {fileID: 1440052729}
 --- !u!1 &1745323241
 GameObject:
   m_ObjectHideFlags: 0
