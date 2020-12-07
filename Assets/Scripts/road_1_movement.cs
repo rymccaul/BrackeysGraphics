@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class road_1_movement : MonoBehaviour
 {
-    // public Rigidbody rb;
+
     public float startpos_x;
     public float startpos_y;
     public float startpos_z;
@@ -14,6 +14,8 @@ public class road_1_movement : MonoBehaviour
     public float scale;
     public float other_road_scale;
     public Vector3 velocity;
+
+    public GameObject other_road;
 
     private GameObject player_obj = null;
     private float player_pos;
@@ -47,7 +49,7 @@ public class road_1_movement : MonoBehaviour
             /*Debug.Log("pos: " + pos.ToString() + ", condition: " +
             (player_pos -(scale/2) - 15).ToString() + ", player: "
               + player_pos.ToString() + ", scale: " + scale.ToString());*/
-            other_road_pos = GameObject.Find("road 2").transform.position.z;
+            other_road_pos = other_road.transform.position.z;
             transform.position = new Vector3(0, 0, (other_road_pos + (other_road_scale / 2) + (scale / 2)));
         }
         transform.position += velocity * Time.deltaTime;
