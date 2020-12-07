@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class player_mirror_script : MonoBehaviour
 {
@@ -12,9 +13,13 @@ public class player_mirror_script : MonoBehaviour
     private bool isOnRoad = true;
     private bool meshRendererCurrentValue = true;
 
+    private TextMeshProUGUI gameover_text = null;
+
     // Start is called before the first frame update
     void Start()
     {
+         gameover_text = GameObject.Find("UI_game_over").GetComponent<TextMeshProUGUI>();
+
          // Create copy of player and disable box collider for reflection
          reflected_player = Instantiate(player);
          reflected_player.GetComponent<BoxCollider>().enabled = false;
@@ -50,6 +55,8 @@ public class player_mirror_script : MonoBehaviour
         if (reflected_player.transform.position.x > 7.5 || reflected_player.transform.position.x < -7.5)
         {
             isOnRoad = false;
+            gameover_text.enabled = true;
+            Time.timeScale = 0f;
         }
         else
         {
