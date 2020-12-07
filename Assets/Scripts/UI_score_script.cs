@@ -11,6 +11,7 @@ public class UI_score_script : MonoBehaviour
     private GameObject speed_text_obj = null;
     //private GameObject time_text_obj = null;
 
+    private UI_speedScript speed_script;
     private float player_speed;
 
     // Start is called before the first frame update
@@ -19,13 +20,13 @@ public class UI_score_script : MonoBehaviour
         speed_text_obj = GameObject.Find("UI_speed_text");
         score_text = GameObject.Find("UI_score").
                                         GetComponent<TMPro.TextMeshProUGUI>();
+        speed_script = speed_text_obj.GetComponent<UI_speedScript>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        player_speed = speed_text_obj.GetComponent<UI_speedScript>()
-                                                                .player_speed;
+        player_speed = speed_script.player_speed;
 
         current_score += calculateScoreUpdate(player_speed, 0);
         score_text.text = (current_score).ToString("#");
