@@ -47,7 +47,6 @@ public class player_mirror_script : MonoBehaviour
         // Set rotation to mimic original
         reflected_player.transform.rotation = player.transform.rotation * relativeRotation;
 
-
         if (reflected_player.transform.position.x > 7.5 || reflected_player.transform.position.x < -7.5)
         {
             isOnRoad = false;
@@ -60,6 +59,8 @@ public class player_mirror_script : MonoBehaviour
         setMeshRenderer();
     }
 
+    // Using function and extra variable simply to avoid setting the meshRenderer on every frame unless
+    // there has actually been a change to the isOnRoad variable.
     void setMeshRenderer()
     {
         if (meshRendererCurrentValue != isOnRoad)

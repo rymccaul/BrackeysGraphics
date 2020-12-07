@@ -56,6 +56,8 @@ public class npc_mirror_script : MonoBehaviour
         setMeshRenderer();
     }
 
+    // Using function and extra variable simply to avoid setting the meshRenderer on every frame unless
+    // there has actually been a change to the isOnRoad variable.
     void setMeshRenderer()
     {
         if (meshRendererCurrentValue != isOnRoad)
