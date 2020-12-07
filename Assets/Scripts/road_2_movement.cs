@@ -15,6 +15,8 @@ public class road_2_movement : MonoBehaviour
     public float other_road_scale;
     public Vector3 velocity;
 
+    public GameObject other_road;
+
     private GameObject player_obj = null;
     private float player_pos;
 
@@ -44,7 +46,7 @@ public class road_2_movement : MonoBehaviour
         pos = transform.position.z;
         if (pos < player_pos -(scale/2) - 15)
         {
-            other_road_pos = GameObject.Find("road 1").transform.position.z;
+            other_road_pos = other_road.transform.position.z;
             transform.position = new Vector3(0, 0, (other_road_pos + (other_road_scale/2) + (scale/2)));
         }
         transform.position += velocity * Time.deltaTime;
