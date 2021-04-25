@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class sunScript : MonoBehaviour
+public class mountain_mover : MonoBehaviour
 {
     private Vector3 offsetFromPlayer;
     public Transform cameraTransform;
@@ -10,7 +10,7 @@ public class sunScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        offsetFromPlayer = new Vector3(0, 39.95f, 690f);
+        offsetFromPlayer = new Vector3(0, 11.43f, 688f);
         transform.position = offsetFromPlayer;
     }
 
