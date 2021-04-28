@@ -200,7 +200,7 @@ public class ver2_bldg_movement : MonoBehaviour
             debugReshuffle += rand + ", ";
         }
 
-        Debug.Log("The shuffled list is: " + debugReshuffle);
+        //Debug.Log("The shuffled list is: " + debugReshuffle);
 
         
 
@@ -278,7 +278,7 @@ public class ver2_bldg_movement : MonoBehaviour
                     break;
             }
 
-            Debug.Log("Building to place is: " + bldgToPlace.name + ", width = " + bldgToPlaceWidth);
+            //Debug.Log("Building to place is: " + bldgToPlace.name + ", width = " + bldgToPlaceWidth);
 
             emptyRootPosition.x -= bldgToPlaceWidth * buildingWidthSpacing * 1.8f;
             bldgToPlace.transform.position = emptyRootPosition;

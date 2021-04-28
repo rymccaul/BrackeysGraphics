@@ -101,7 +101,7 @@ public class frontHingeAnchorScript : MonoBehaviour
                 xMoveMultiplier = 10;
                 leftOrRight = 1;
                 readyForInput = false;
-                playerMovementScript.swerveRecoveryFactor = 3;
+                //playerMovementScript.swerveRecoveryFactor = 3;
             }
 
             if ((Input.GetKey("a") || playerScript.holdingLeft) && readyForInput == true)
@@ -113,7 +113,7 @@ public class frontHingeAnchorScript : MonoBehaviour
                 xMoveMultiplier = 10;
                 leftOrRight = -1;
                 readyForInput = false;
-                playerMovementScript.swerveRecoveryFactor = 3;
+                //playerMovementScript.swerveRecoveryFactor = 3;
             }
 
             // move left or right by setting xMovementCoordinate and using rb.MovePosition later
@@ -353,7 +353,7 @@ public class frontHingeAnchorScript : MonoBehaviour
         //rb.velocity = new Vector3(0, 0, playerZvel / 3);
         rb.angularVelocity = Vector3.zero;
 
-        transform.position = player.transform.position + (player.transform.forward * 3f);
+        transform.position = player.transform.position + (player.transform.forward * 5f);
         transform.rotation = player.transform.rotation;
 
         rb.transform.SetParent(player.transform);

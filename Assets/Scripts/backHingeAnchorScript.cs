@@ -98,7 +98,7 @@ public class backHingeAnchorScript : MonoBehaviour
                 xMoveMultiplier = 10;
                 leftOrRight = 1;
                 readyForInput = false;
-                playerMovementScript.swerveRecoveryFactor = 3f;
+                //playerMovementScript.swerveRecoveryFactor = 3f;
             }
 
             if ((Input.GetKey("a") || playerScript.holdingLeft) && readyForInput == true)
@@ -110,7 +110,7 @@ public class backHingeAnchorScript : MonoBehaviour
                 xMoveMultiplier = 10;
                 leftOrRight = -1;
                 readyForInput = false;
-                playerMovementScript.swerveRecoveryFactor = 3f;
+                //playerMovementScript.swerveRecoveryFactor = 3f;
             }
 
             /*
@@ -346,7 +346,7 @@ public class backHingeAnchorScript : MonoBehaviour
         //rb.velocity = new Vector3(0, 0, playerZvel / 3);
         rb.angularVelocity = Vector3.zero;
 
-        transform.position = player.transform.position + (player.transform.forward * -3f);
+        transform.position = player.transform.position + (player.transform.forward * -5f);
         transform.rotation = player.transform.rotation;
 
         rb.transform.SetParent(player.transform);

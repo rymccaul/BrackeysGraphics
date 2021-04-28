@@ -115,7 +115,7 @@ public class Player_movement : MonoBehaviour
         currentRot = 0;
         xSwerveCurrent = 0;
         xSwervePrior = 0;
-        swerveRecoveryFactor = 3;
+        swerveRecoveryFactor = 1;
 
         hingeApplied = false;
 
@@ -379,7 +379,23 @@ public class Player_movement : MonoBehaviour
                 }
                 else
                 {
+                    // trying something new for the anchor
+                    Vector3 frontPosVector = anchorObjectFront.transform.position;
+                    Vector3 backPosVector = anchorObjectBack.transform.position;
                     float crashPos = transform.position.x;
+
+                    if (frontPosVector.z < backPosVector.z)
+                    {
+                        crashPos += backPosVector.x;
+                        crashPos /= 2f;
+                    }
+                    else
+                    {
+                        crashPos += frontPosVector.x;
+                        crashPos /= 2f;
+                    }
+
+                    //float crashPos = transform.position.x;  // commented out for testing.
                     crashXvelocity = rb.velocity.x;
 
                     fixRotation = true;
@@ -690,7 +706,7 @@ public class Player_movement : MonoBehaviour
                     hinge.connectedBody = anchorObjectBack;
                 }
 
-                hingeSpring.spring = 20000f;
+                hingeSpring.spring = 14000f;
                 hingeSpring.damper = 800f;
                 hinge.breakForce = 0.1f;
                 hinge.spring = hingeSpring;
@@ -719,7 +735,7 @@ public class Player_movement : MonoBehaviour
             {
                 if (carCrash == false)
                 {
-                    swerveRecoveryFactor = 3;
+                    //swerveRecoveryFactor = 3;
                     crashZvelocity = rb.velocity.z;
                     crashXvelocity = rb.velocity.x;
                     carCrash = true;
@@ -766,7 +782,7 @@ public class Player_movement : MonoBehaviour
             //Debug.Log("Player's crash velocity (x) is: " + crashXvelocity);
             xSwerveCurrent = 0;
             xSwervePrior = 0;
-            swerveRecoveryFactor = 2;
+            //swerveRecoveryFactor = 2;
 
             crashZvelocity = rb.velocity.z;
             //Debug.Log("Player's crash velocity (z) is: " + crashZvelocity);
