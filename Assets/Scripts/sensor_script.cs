@@ -52,6 +52,7 @@ public class sensor_script : MonoBehaviour
     public material_controller material_chooser;
 
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -79,6 +80,7 @@ public class sensor_script : MonoBehaviour
         expensiveFunctCount++;
 
         maxSpeed = Random.Range(-10f, -5f);
+
     }
 
     // Update is called once per frame
