@@ -96,6 +96,15 @@ public class Player_movement : MonoBehaviour
     public float boostRechargeRate;
     public float boostConsumeRate;
 
+    // isGrounded dot product.  Want to know when the car is touching the road but is upside down or sideways
+
+    public float isGroundedDotProduct;
+    public float angularVelocityMagnitude;
+    public float needToIncreaseTorqueStrength;
+    private int rightSideUpCheckCount;
+    public float torqueStrength;
+    private float flipRighSideUpDelay;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -141,6 +150,9 @@ public class Player_movement : MonoBehaviour
         blastForce = 1000;
 
         screenWidth = Screen.width;
+
+        torqueStrength = 100f;
+        flipRighSideUpDelay = 0.25f;
     }
 
     /*
@@ -222,6 +234,8 @@ public class Player_movement : MonoBehaviour
 
     void FixedUpdate()
     {
+
+        //isGroundedDotProduct = Vector3.Dot(rb.transform.position, Vector3.forward);
         // fix post-crash z velocity
         if (postCrashZvelFix == true)
         {
@@ -450,9 +464,29 @@ public class Player_movement : MonoBehaviour
                 }
 
             }
+            else  // i.e. if carCrash is true and isGrounded is false
+            {
+                if (Input.GetKey("d") || (holdingRight))
+                {
+                    if (rb.velocity.x < 5)
+                    {
+                        rb.AddForce(turnspeed * Time.deltaTime * 0.75f, 0, 0);
+                    }
+                    wantsToMoveRight = false;
+                }
+
+                if (Input.GetKey("a") || (holdingLeft))
+                {
+                    if (rb.velocity.x > -5)
+                    {
+                        rb.AddForce(-turnspeed * Time.deltaTime * 0.75f, 0, 0);
+                    }
+                    wantsToMoveLeft = false;
+                }
+            }
 
         }
-        else
+        else // i.e. if (carCrash == false)
         {
             if (hingeApplied == false)
             {
@@ -730,7 +764,7 @@ public class Player_movement : MonoBehaviour
         // collision with road
         if (collision.gameObject.layer == 8)
         {
-            isGrounded = true;
+            //isGrounded = true;
             if (jumpOn == true)
             {
                 if (carCrash == false)
@@ -763,6 +797,7 @@ public class Player_movement : MonoBehaviour
         if (collision.gameObject.layer == 8)
         {
             isGrounded = false;
+            flipRighSideUpDelay = 0.35f;
         }
 
         if (collision.gameObject.layer == 10)
@@ -791,5 +826,84 @@ public class Player_movement : MonoBehaviour
         }
     }
 
+    private void OnCollisionStay(Collision collision)
+    {
+        if (isGrounded == false)
+        {
+            if (collision.gameObject.layer == 8)
+            {
+                flipRighSideUpDelay -= Time.deltaTime;
+                angularVelocityMagnitude = Mathf.Sqrt(Mathf.Pow(rb.angularVelocity.x, 2) + Mathf.Pow(rb.angularVelocity.z, 2));
+                //angularVelocityMagnitude = rb.angularVelocity.magnitude;
+                if (angularVelocityMagnitude < 0.05f)
+                {
+                    RightSideUpCheck();
+                }
+
+            }
+        }
+    }
+
+    void RightSideUpCheck()
+    {
+
+        Vector3 playerOrientation = rb.transform.rotation.eulerAngles;
+
+        float playerDotRight = Vector3.Dot(playerOrientation, Vector3.right);
+        float playerDotForward = Vector3.Dot(playerOrientation,Vector3.forward);
+
+        int playerDotRightRounded = Mathf.RoundToInt(playerDotRight / 90f) * 90;
+        int playerDotForwardRounded = Mathf.RoundToInt(playerDotForward / 90f) * 90;
+        
+        needToIncreaseTorqueStrength = 1;
+
+        if (playerDotRightRounded == 0)
+        {
+            playerDotRightRounded = 360;
+        }
+
+        if (playerDotForwardRounded == 360)
+        {
+            playerDotForwardRounded = 0;
+        }
+
+        if (playerDotRightRounded == 270)
+        {
+            ApplyRestoreTorque(Vector3.right, needToIncreaseTorqueStrength, flipRighSideUpDelay);
+        }
+        else if (playerDotRightRounded == 90)
+        {
+            ApplyRestoreTorque(Vector3.left, needToIncreaseTorqueStrength,flipRighSideUpDelay);
+        }
+        else if (playerDotForwardRounded == 270)
+        {
+            ApplyRestoreTorque(Vector3.forward, needToIncreaseTorqueStrength,flipRighSideUpDelay);
+        }
+        else if (playerDotForwardRounded == 90)
+        {
+            ApplyRestoreTorque(Vector3.back, needToIncreaseTorqueStrength,flipRighSideUpDelay);
+        }
+        else if (playerDotForwardRounded == 180)
+        {
+            needToIncreaseTorqueStrength = 1.5f;
+            ApplyRestoreTorque(Vector3.back, needToIncreaseTorqueStrength,flipRighSideUpDelay);
+        }
+        else
+        {
+            isGrounded = true;
+        }
+
+        rightSideUpCheckCount++;
+        
+    }
+
+    void ApplyRestoreTorque(Vector3 direction, float torqueStrengthIncrease, float readyToFlip)
+    {
+        if (readyToFlip < 0)
+        {
+            rb.AddForce(Vector3.up * 100f * torqueStrengthIncrease);
+            rb.AddRelativeTorque(direction * torqueStrength);
+        }
+    }
 
 }
