@@ -36,7 +36,7 @@ public class cameraScript : MonoBehaviour
         velocityRef = 0;
         smoothTime = 0.25f;
 
-        cameraMobility = 0.5f;
+        cameraMobility = 0.7f;
 
     }
 

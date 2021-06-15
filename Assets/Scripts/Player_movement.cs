@@ -409,7 +409,7 @@ public class Player_movement : MonoBehaviour
                         crashPos /= 2f;
                     }
 
-                    //float crashPos = transform.position.x;  // commented out for testing.
+                    //crashPos = transform.position.x;  // commented out for testing.
                     crashXvelocity = rb.velocity.x;
 
                     fixRotation = true;
@@ -740,7 +740,7 @@ public class Player_movement : MonoBehaviour
                     hinge.connectedBody = anchorObjectBack;
                 }
 
-                hingeSpring.spring = 14000f;
+                hingeSpring.spring = 12000f;
                 hingeSpring.damper = 800f;
                 hinge.breakForce = 0.1f;
                 hinge.spring = hingeSpring;

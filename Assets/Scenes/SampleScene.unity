@@ -2902,6 +2902,10 @@ MonoBehaviour:
   boostBar: 0
   boostRechargeRate: 0
   boostConsumeRate: 0
+  isGroundedDotProduct: 0
+  angularVelocityMagnitude: 0
+  needToIncreaseTorqueStrength: 0
+  torqueStrength: 0
 --- !u!114 &904389571
 MonoBehaviour:
   m_ObjectHideFlags: 0
