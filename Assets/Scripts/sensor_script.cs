@@ -79,7 +79,7 @@ public class sensor_script : MonoBehaviour
         layermask = ~layermask;
         expensiveFunctCount++;
 
-        maxSpeed = Random.Range(-10f, -5f);
+        maxSpeed = Random.Range(-10f, 0f);
 
     }
 
@@ -98,10 +98,15 @@ public class sensor_script : MonoBehaviour
             otherUpdated = null;
             material_chooser.brakeOn = false;
 
-            if (parRb.velocity.z < -5f)
+            float currentSpeed = parRb.velocity.z;
+            
+            if (currentSpeed < maxSpeed)
             {
-                accelerationForce = 100f;
+                accelerationForce = HitTheGas(currentSpeed, maxSpeed, timeToCollision, distanceBetween);
                 parRb.AddForce(0, 0, accelerationForce * Time.deltaTime);
+                
+                //accelerationForce = 100f;
+                //parRb.AddForce(0, 0, accelerationForce * Time.deltaTime);
             }
             
             // DONE: reset sensor size and set otherUpdated to NULL (this should not go in onTriggerExit)
@@ -129,29 +134,6 @@ public class sensor_script : MonoBehaviour
             //check if otherUpdated is NULL, check if otherUpdated is triggerList[1];
             // if our checks make sense, let's start adjusting the sensor size
         }
-
-
-        /*
-        if (tooManyObstacles == true)
-        {
-
-            tooManyObstaclesFunction();
-         
-        }
-        else if (triggerList.Count > 1 && waitOneFrame < 1)
-        {
-            tooManyObstaclesFunction();
-        }
-        waitOneFrame--;
-        */
-
-        /*
-        if (numberOfCollisionObjects == 0)
-        {
-            accelerationForce = 100f;
-            parRb.AddForce(0, 0, accelerationForce * Time.deltaTime);
-        }
-        */
 
         if (laneChanger.gotBlasted == false)
         {
@@ -185,6 +167,13 @@ public class sensor_script : MonoBehaviour
                         timeToCollision = 9999f;
                     }
 
+                    if (distanceBetween < 5f)
+                    {
+                        float tailgateForce = PreventTailgate(distanceBetween);
+                        parRb.AddForce(0, 0, -tailgateForce * Time.deltaTime);
+
+                    }
+
                 }
                 else
                 {
@@ -207,8 +196,22 @@ public class sensor_script : MonoBehaviour
                     //transform.localScale = new Vector3(0, 0, 0);
                 }
 
-                if (timeToCollision > 0)
+                if (timeToCollision > 0 && timeToCollision < 3f)
                 {
+
+                    brakeForce = ApplyBrakes(timeToCollision);
+
+                    //Vector3 setVelocity = parRb.velocity;
+                    //setVelocity.z = otherVelocity;
+                    //parRb.velocity = setVelocity;
+
+                    if (laneChangeRecharge < 0)
+                    {
+                        laneChanger.changeLanes(0.01f, otherUpdated, otherVelocity);
+                        laneChangeRecharge = 1f;
+                    }
+
+                    /*
                     brakeForce = 0f;
                     if (distanceBetween < 5f)
                     {
@@ -216,7 +219,7 @@ public class sensor_script : MonoBehaviour
                         setVelocity.z = otherVelocity;
                         parRb.velocity = setVelocity;
 
-                        if (laneChangeRecharge < 0 /*&& driverAggressionFactor == 1*/)
+                        if (laneChangeRecharge < 0 )
                         {
                             laneChanger.changeLanes(0.01f, otherUpdated, otherVelocity);
                             laneChangeRecharge = 1f;
@@ -235,7 +238,7 @@ public class sensor_script : MonoBehaviour
                     {
                         brakeForce = 100f / timeToCollision;
 
-                        if (laneChangeRecharge < 0 /*&& driverAggressionFactor < 5*/)
+                        if (laneChangeRecharge < 0 )
                         {
                             laneChanger.changeLanes(timeToCollision, otherUpdated, otherVelocity);
                             laneChangeRecharge = 1f;
@@ -245,7 +248,7 @@ public class sensor_script : MonoBehaviour
                     else if (timeToCollision > 2f)
                     {
                         brakeForce = 200f / timeToCollision;
-                        if (laneChangeRecharge < 0 /*&& driverAggressionFactor < 6*/)
+                        if (laneChangeRecharge < 0 )
                         {
                             laneChanger.changeLanes(timeToCollision, otherUpdated, otherVelocity);
                             laneChangeRecharge = 1f;
@@ -256,7 +259,7 @@ public class sensor_script : MonoBehaviour
                     {
                         brakeForce = 400f / timeToCollision;
 
-                        if (laneChangeRecharge < 0 /*&& driverAggressionFactor == 6*/)
+                        if (laneChangeRecharge < 0 )
                         {
 
                             laneChanger.changeLanes(timeToCollision, otherUpdated, otherVelocity);
@@ -264,7 +267,7 @@ public class sensor_script : MonoBehaviour
 
                         }
                     }
-
+                    */
                     parRb.AddForce(0, 0, -brakeForce * Time.deltaTime);
                     if (brakeForce > 0)
                     {
@@ -274,23 +277,28 @@ public class sensor_script : MonoBehaviour
                     {
                         material_chooser.brakeOn = false;
                     }
-
+                    
                 }
+                else
+                {
+                    float currentSpeed = parRb.velocity.z;
+                    accelerationForce = HitTheGas(currentSpeed, maxSpeed, timeToCollision, distanceBetween);
+
+                    parRb.AddForce(0, 0, accelerationForce * Time.deltaTime);
+                        
+                }
+                /*
                 else if (timeToCollision < -2f && parVelocity < maxSpeed)
                 {
                     accelerationForce = 100f;
                     parRb.AddForce(0, 0, accelerationForce * Time.deltaTime);
                     material_chooser.brakeOn = false;
                 }
+                */
+                
             }
         }
 
-        if (transform.localPosition.x > 1f)
-        {
-            Debug.Log("Something is screwy about " + parRb.name);
-            Debug.Break();
-        }
-        
     }
 
     public void tooManyObstaclesFunction()
@@ -322,25 +330,12 @@ public class sensor_script : MonoBehaviour
 
             }
         }
-        /*
-        for (int i = 0; triggerList.Count > 1; i++)
-        {
-            if (triggerList[i] != otherUpdated)
-            {
-                triggerList.Remove(triggerList[i]);
-            }
-        }
-        */
+
         if (expensiveFunctCount >= 12)
         {
             //Debug.Log(parRb.name + " has called tooManyObstacles() " + expensiveFunctCount + " times.");
             //Debug.Break();
         }
-        //tooManyObstacles = false;
-        //Debug.Log(parRb.name + " had too many obstacles, now otherUpdated is " + otherUpdated.name);
-        //Debug.Break();
-
-
     }
 
     public void obstacleRespawn()
@@ -348,74 +343,73 @@ public class sensor_script : MonoBehaviour
         otherUpdated = null;
         triggerList = new List<Collider>();
         colpos = new Vector3(0, 0.5f, 25.5f);
-        //colpos = transform.localPosition;
-        //colpos.z = 25.5f;
         colpos.x = sensorPosX;
         transform.localPosition = colpos;
         transform.localScale = new Vector3(sensorResizeX, 0.5f, 50f);
         expensiveFunctCount = 0;
-        maxSpeed = Random.Range(-10f, -5f);
+        maxSpeed = Random.Range(-10f, 0f);
 
     }
 
+    private float ApplyBrakes(float collisionTime)
+    {
+        //float brakeForce = (-800f * collisionTime) + 2400f;
+
+        float brakeForcePow = (-0.8f * timeToCollision) + 4.7f;
+        float brakeForce = Mathf.Pow(7f, brakeForcePow);
+
+        if (brakeForce < 100)
+        {
+            brakeForce = 0;
+        }
+
+        return brakeForce;
+    }
+
+    private float PreventTailgate(float followingDistance)
+    {
+        float tailgateBrakeForce = 1000f;
+
+
+
+        return tailgateBrakeForce;
+    }
+
+    private float HitTheGas(float currentSpeed, float maxSpeed, float collisionTime, float followingDistance)
+    {
+        float accelerationForce = 0;
+
+        if (currentSpeed > maxSpeed || followingDistance < 10f)
+        {
+
+        }
+        else
+        {
+            accelerationForce = 750f;
+            Debug.DrawRay(parRb.position, Vector3.up * 50f, Color.cyan);
+        }
+
+        return accelerationForce;
+
+    }
     private void OnTriggerEnter(Collider other)
     {
-        //float dist = (other.transform.position.z - parRb.transform.position.z);
-        //triggerList.Add(new Obstacle() { distanceToPlayer = dist, col = other});
-        //waitOneFrame = 1;
         triggerList.Add(other);
         if (triggerList.Count == 1)
         {
             otherUpdated = other;
         }
-        //numberOfCollisionObjects++;
-        //otherUpdated = other;
-        //timeToChangeLanes = false;
-        
-        // Debug.Log("We're close to: " + other.name);
         
     }
 
     private void OnTriggerStay(Collider other)
     {
-        /*
-        if (triggerList.Count > 1)//numberOfCollisionObjects > 1)
-        {
-            tooManyObstacles = true;
 
-        }else if (other != otherUpdated && triggerList.Count == 1)//numberOfCollisionObjects == 1)
-        {
-            Debug.Log(parRb.name + " needed to be fixed.");
-            otherUpdated = other;
-            Debug.Break();
-        }
-        */
     }
 
     private void OnTriggerExit(Collider other)
     {
-        triggerList.Remove(other);
-        //numberOfCollisionObjects--;
-        
-        /*
-        if (triggerList.Count == 0)//numberOfCollisionObjects == 0)
-        {
-            //parRb.AddForce(0, 0, 500);
-
-            //colpos = transform.localPosition;
-            //colpos.z += 25.5f;
-            //colpos.z = (((distanceBetween / 2) + 0.5f));
-            colpos = transform.localPosition;
-            colpos.z = 25.5f;
-            colpos.x += sensorPosX;
-            transform.localPosition = colpos;
-            //transform.localPosition = colpos;
-            transform.localScale = new Vector3(sensorResizeX, 0.5f, 50f);
-            //timeToChangeLanes = false;
-        }
-        */
-        
-        
+        triggerList.Remove(other);        
     }
    
 }

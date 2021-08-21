@@ -11,6 +11,7 @@ public class obstacle_spawner : MonoBehaviour
     */
     public GameObject[] prefab_array;
     public int traffic_count;
+    public GameObject player;
 
     // Start is called before the first frame update
     void Start()
@@ -20,5 +21,23 @@ public class obstacle_spawner : MonoBehaviour
             Instantiate(prefab_array[Random.Range(0,prefab_array.Length)],
                             new Vector3(0, 0, -(i + 100)), Quaternion.identity);
         }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            float playerZpos = player.transform.position.z;
+            Spawncar(playerZpos);
+        }
+    }
+
+    private void Spawncar(float playerPosition)
+    {
+        Instantiate(prefab_array[Random.Range(0, prefab_array.Length)],
+                            new Vector3(0, -30f, playerPosition - 30f), Quaternion.identity);
+        traffic_count++;
+
+        Debug.Log("There are " + traffic_count + " cars.");
     }
 }

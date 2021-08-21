@@ -100,98 +100,10 @@ public class obstacle_movement : MonoBehaviour
         player_pos = player_obj.transform.position.z;
         pos = transform.position.z;
         height = transform.position.y;
+
         if (pos < player_pos - 8 || height < -30)
         {
-            //float rayLength = 8f;
-            random_lane_int = Random.Range(-3, 4);
-            random_lane = (float)random_lane_int;
-            random_distance = Random.Range(player_pos + 100, player_pos + 150);
-
-            spawnCheck_origin = new Vector3(2 * random_lane, 1, random_distance); //+ 4f);
-
-            Vector3 spawnCheckBoxSize = new Vector3(1f, 0.25f, 4f);
-            Vector3 spawnCheckCenterPosition = spawnCheck_origin;
-
-            Collider[] spawnCheck = Physics.OverlapBox(spawnCheckCenterPosition, spawnCheckBoxSize, Quaternion.identity, layermask);
-
-            Vector3 spawnCheckVisualizerCenter = spawnCheckCenterPosition;
-            spawnCheckVisualizerCenter.z += 4f;
-
-            Vector3 spawnCheckVisualizerRight = spawnCheckVisualizerCenter;
-            spawnCheckVisualizerRight.x += 1f;
-
-            Vector3 spawnCheckVisualizerLeft = spawnCheckVisualizerCenter;
-            spawnCheckVisualizerLeft.x -= 1f;
-
-            Debug.DrawRay(spawnCheckVisualizerCenter, Vector3.back * 8f);
-            Debug.DrawRay(spawnCheckVisualizerLeft, Vector3.back * 8f);
-            Debug.DrawRay(spawnCheckVisualizerRight, Vector3.back * 8f);
-
-            if (spawnCheck.Length != 0)
-            {
-                //Debug.Log("Spawn bad.");
-            }
-            else
-            {
-                rb.position = new Vector3(2 * random_lane, 1, random_distance);
-
-                transform.rotation = Quaternion.identity;
-                rb.angularVelocity = Vector3.zero;
-
-                //rb.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-                carSpeed = Random.Range(-10f, -40f);
-                rb.velocity = new Vector3(0, 0, carSpeed);
-
-                currentLane = random_lane_int;
-                destinationLane = random_lane_int;
-
-                rightLaneChangeSafe = false;
-                leftLaneChangeSafe = false;
-
-                //GetComponent<Renderer>().material = defaultMat;
-                material_chooser.brakeOn = false;
-                material_chooser.leftOrRight = 0;
-
-                closeSensorScript.sensorResizeX = 2f;
-                closeSensorScript.sensorPosX = 0;
-
-                closeSensorScript.obstacleRespawn();
-
-                gotBlasted = false;
-            }
-
-            /*
-            if (Physics.Raycast(spawnCheck_origin, Vector3.back, rayLength) == true)
-            {
-                //Debug.Log("Spawn bad");
-            }
-            else
-            {
-                rb.position = new Vector3(2 * random_lane, 1, random_distance);
-
-                transform.rotation = Quaternion.identity;
-                rb.angularVelocity = Vector3.zero;
-
-                //rb.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-                carSpeed = Random.Range(-10f, -40f);
-                rb.velocity = new Vector3(0, 0, carSpeed);
-
-                currentLane = random_lane_int;
-                destinationLane = random_lane_int;
-
-                rightLaneChangeSafe = false;
-                leftLaneChangeSafe = false;
-
-                GetComponent<Renderer>().material = defaultMat;
-
-                closeSensorScript.sensorResizeX = 2f;
-                closeSensorScript.sensorPosX = 0;
-
-                closeSensorScript.obstacleRespawn();
-
-            }
-            */
-
+            FindNewSpawnPoint();
         }
 
         if (destinationLane > currentLane)
@@ -230,7 +142,7 @@ public class obstacle_movement : MonoBehaviour
 
     public void changeLanes(float frontTimeToCollision, Collider otherFront, float otherFrontVelocity)
     {
-        if (currentLane == destinationLane)
+        if (currentLane == destinationLane)             //  if we're currently not in the act of changing lanes ...
         {
             needToCheckCurrentLanePreference = false;
             preferCurrentLaneToLeft = false;
@@ -426,15 +338,7 @@ public class obstacle_movement : MonoBehaviour
                         }
                     }
 
-
-                    //myMessage += "); ";
-
-                //}
-                //Debug.Log(rb.name + " wants to change lanes, " + go.name + " in da house");
             }
-
-            //Debug.Log(myMessage);
-            //Debug.Break();
 
 
             if (currentLane != 3)
@@ -454,17 +358,7 @@ public class obstacle_movement : MonoBehaviour
                     {
                         //Debug.Log(rb.name + " likes current lane more than right.");
                     }
-                    /*
-                    if (rightTimeToCollision > frontTimeToCollision)
-                    {
-                        rightLaneChangeSafe = true;
-                    }
-                    else
-                    {
-                        Debug.Log(rb.name + " likes current lane more than right.");
-                        //Debug.Break();
-                    }
-                    */
+
                 }
             }
 
@@ -485,27 +379,9 @@ public class obstacle_movement : MonoBehaviour
                     {
                         //Debug.Log(rb.name + " likes current lane more than left.");
                     }
-                    /*
-                    if (leftTimeToCollision > frontTimeToCollision)
-                    {
-                        leftLaneChangeSafe = true;
-                    }
-                    else
-                    {
-                        Debug.Log(rb.name + " likes current lane more than left.");
-                        //Debug.Break();
-                    }
-                    */
+
                 }
 
-
-
-                /*
-                if (leftTimeToCollision < 0 || leftTimeToCollision > 2f)
-                {
-                    leftLaneChangeSafe = true;
-                }
-                */
             }
 
             if (leftLaneChangeSafe == false && rightLaneChangeSafe == false)
@@ -579,22 +455,6 @@ public class obstacle_movement : MonoBehaviour
                         }
                     }
 
-                    /*
-                    int leftOrRight = Random.Range(0, 2);
-                    if (leftOrRight == 0)
-                    {
-                        Debug.Log(rb.name + "went to to a tossup and chose left.");
-                        destinationLane--;
-                        rb.AddForce(-75, 0, 0);
-                    }
-                    else
-                    {
-                        Debug.Log(rb.name + "went to to a tossup and chose right.");
-                        destinationLane++;
-                        rb.AddForce(75, 0, 0);
-
-                    }
-                    */
                 }
                 //Debug.Break();
             }
@@ -618,6 +478,67 @@ public class obstacle_movement : MonoBehaviour
         rightLaneChangeSafe = false;
         leftLaneChangeSafe = false;
         gotBlasted = true;
+    }
+
+    private void FindNewSpawnPoint()
+    {
+        random_lane_int = Random.Range(-3, 4);
+        random_lane = (float)random_lane_int;
+        random_distance = Random.Range(player_pos + 100, player_pos + 150);
+
+        spawnCheck_origin = new Vector3(2 * random_lane, 1, random_distance); //+ 4f);
+
+        Vector3 spawnCheckBoxSize = new Vector3(1f, 0.25f, 4f);
+        Vector3 spawnCheckCenterPosition = spawnCheck_origin;
+
+        Collider[] spawnCheck = Physics.OverlapBox(spawnCheckCenterPosition, spawnCheckBoxSize, Quaternion.identity, layermask);
+
+        /*
+        Vector3 spawnCheckVisualizerCenter = spawnCheckCenterPosition;
+        spawnCheckVisualizerCenter.z += 4f;
+
+        Vector3 spawnCheckVisualizerRight = spawnCheckVisualizerCenter;
+        spawnCheckVisualizerRight.x += 1f;
+
+        Vector3 spawnCheckVisualizerLeft = spawnCheckVisualizerCenter;
+        spawnCheckVisualizerLeft.x -= 1f;
+
+        Debug.DrawRay(spawnCheckVisualizerCenter, Vector3.back * 8f);
+        Debug.DrawRay(spawnCheckVisualizerLeft, Vector3.back * 8f);
+        Debug.DrawRay(spawnCheckVisualizerRight, Vector3.back * 8f);
+        */
+        if (spawnCheck.Length != 0)
+        {
+            //Debug.Log("Spawn bad.");
+        }
+        else
+        {
+            rb.position = new Vector3(2 * random_lane, 1, random_distance);
+
+            transform.rotation = Quaternion.identity;
+            rb.angularVelocity = Vector3.zero;
+
+            //rb.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+            carSpeed = Random.Range(-10f, -40f);
+            rb.velocity = new Vector3(0, 0, carSpeed);
+
+            currentLane = random_lane_int;
+            destinationLane = random_lane_int;
+
+            rightLaneChangeSafe = false;
+            leftLaneChangeSafe = false;
+
+            //GetComponent<Renderer>().material = defaultMat;
+            material_chooser.brakeOn = false;
+            material_chooser.leftOrRight = 0;
+
+            closeSensorScript.sensorResizeX = 2f;
+            closeSensorScript.sensorPosX = 0;
+
+            closeSensorScript.obstacleRespawn();
+
+            gotBlasted = false;
+        }
     }
 
 
@@ -704,40 +625,6 @@ public class obstacle_movement : MonoBehaviour
                         currentLane = 4;
                     }
                 }
-                /*
-                if (blastPos < -5)
-                {
-                    destinationLane = -3;
-                }else if (blastPos < -3)
-                {
-                    destinationLane = -2;
-                }else if (blastPos < -1)
-                {
-                    destinationLane = -1;
-                }else if (blastPos < 1)
-                {
-                    destinationLane = 0;
-                }else if (blastPos < 3)
-                {
-                    destinationLane = 1;
-                }else if (blastPos < 5)
-                {
-                    destinationLane = 2;
-                }else if (blastPos > 5)
-                {
-                    destinationLane = 3;
-                }
-
-
-                if (blastPos > (2 * destinationLane))
-                {
-                    currentLane = destinationLane + 1;
-                }
-                else
-                {
-                    currentLane = destinationLane - 1;
-                }
-                */
                 gotBlasted = false;
             }
         }
@@ -746,210 +633,3 @@ public class obstacle_movement : MonoBehaviour
 
 
 }
-
-
-
-    /*
-    public void changeLanes()
-    {
-        //Debug.Log("It's time to for " + rb.name + " to change lanes.");
-
-        rightLaneChangeSafe = false;
-        leftLaneChangeSafe = false;
-
-        rightLaneSafetyCount = 0;
-        int leftLaneSafetyCount = 0;
-
-        float lanecheckRayLength = 10f;
-
-        if (destinationLane < 3)
-        {
-            Vector3 RightLaneChecker = new Vector3(transform.position.x + 2f, 1, transform.position.z);
-
-            Ray rightForward = new Ray(RightLaneChecker, Vector3.forward);
-            Ray rightBack = new Ray(RightLaneChecker, Vector3.back);
-
-            Debug.DrawRay(RightLaneChecker, Vector3.forward * lanecheckRayLength);
-            Debug.DrawRay(RightLaneChecker, Vector3.back * lanecheckRayLength);
-
-            RaycastHit rightForwardHit;
-            RaycastHit rightBackwardHit;
-
-            if (Physics.Raycast(rightForward, out rightForwardHit, lanecheckRayLength, layermask) == true)
-            {
-                if (rightForwardHit.distance > 1)
-                {
-                    velocityDifferenceRightForward = rb.velocity.z - rightForwardHit.rigidbody.velocity.z;
-                    timeToCollisionRightForward = rightForwardHit.distance / velocityDifferenceRightForward;
-
-                    if (timeToCollisionRightForward < 0 || timeToCollisionRightForward > 1)
-                    {
-                        rightLaneSafetyCount++;
-                    }
-
-                }
-            }
-            else
-            {
-                rightLaneSafetyCount++;
-            }
-
-            if (rightLaneSafetyCount == 1)
-            {
-                if (Physics.Raycast(rightBack, out rightBackwardHit, lanecheckRayLength, layermask) == true)
-                {
-                    if (rightBackwardHit.distance > 1)
-                    {
-
-                        velocityDifferenceRightBack = rb.velocity.z - rightBackwardHit.rigidbody.velocity.z;
-                        timeToCollisionRightBack = rightBackwardHit.distance / velocityDifferenceRightBack;
-
-                        if (timeToCollisionRightForward > 0 || timeToCollisionRightBack < -1)
-                        {
-                        rightLaneSafetyCount++;
-                        }
-
-                    }
-                }
-                else
-                {
-                    rightLaneSafetyCount++;
-                }
-            }
-
-        if (rightLaneSafetyCount == 2)
-        {
-            rightLaneChangeSafe = true;
-            //Debug.Log(rb.name + " is safe to change lanes to the right.");
-        }
-
-
-        }
-
-        if (destinationLane > -3)
-        {
-            Vector3 LeftLaneChecker = new Vector3(transform.position.x - 2f, 1, transform.position.z);
-
-            Ray leftForward = new Ray(LeftLaneChecker, Vector3.forward);
-            Ray leftBack = new Ray(LeftLaneChecker, Vector3.back);
-
-            Debug.DrawRay(LeftLaneChecker, Vector3.forward * lanecheckRayLength);
-            Debug.DrawRay(LeftLaneChecker, Vector3.back * lanecheckRayLength);
-
-            RaycastHit leftForwardHit;
-            RaycastHit leftBackwardHit;
-
-            if (Physics.Raycast(leftForward, out leftForwardHit, lanecheckRayLength, layermask) == true)
-            {
-                if (leftForwardHit.distance > 1)
-                {
-                    velocityDifferenceLeftForward = rb.velocity.z - leftForwardHit.rigidbody.velocity.z;
-                    timeToCollisionLeftForward = leftForwardHit.distance / velocityDifferenceLeftForward;
-
-                    if (timeToCollisionLeftForward < 0 || timeToCollisionLeftForward > 1)
-                    {
-                        leftLaneSafetyCount++;
-                    }
-
-                }
-            }
-            else
-            {
-                leftLaneSafetyCount++;
-            }
-
-            if (leftLaneSafetyCount == 1)
-            {
-                if (Physics.Raycast(leftBack, out leftBackwardHit, lanecheckRayLength, layermask) == true)
-                {
-                    if (leftBackwardHit.distance > 1)
-                    {
-
-                        velocityDifferenceLeftBack = rb.velocity.z - leftBackwardHit.rigidbody.velocity.z;
-                        timeToCollisionLeftBack = leftBackwardHit.distance / velocityDifferenceLeftBack;
-
-                        if (timeToCollisionLeftForward > 0 || timeToCollisionLeftBack < -1)
-                        {
-                            leftLaneSafetyCount++;
-                        }
-
-                    }
-                }
-                else
-                {
-                    leftLaneSafetyCount++;
-                }
-            }
-
-            if (leftLaneSafetyCount == 2)
-            {
-                leftLaneChangeSafe = true;
-                //Debug.Log(rb.name + " is safe to change lanes to the left.");
-            }
-
-
-        }
-
-        if (rightLaneChangeSafe == true)
-        {
-            if (leftLaneChangeSafe == false)
-            {
-                destinationLane++;
-                rb.AddForce(75, 0, 0);
-            }
-            else
-            {
-                int leftOrRight = Random.Range(0, 2);
-                if (leftOrRight == 0)
-                {
-                    //Debug.Log(rb.name + "went to to a tossup and chose left.");
-                    destinationLane--;
-                    rb.AddForce(-75, 0, 0);
-                }
-                else
-                {
-                    //Debug.Log(rb.name + "went to to a tossup and chose right.");
-                    destinationLane++;
-                    rb.AddForce(75, 0, 0);
-
-                }
-            }
-            //Debug.Break();
-        }
-        else if (leftLaneChangeSafe == true)
-        {
-            destinationLane--;
-            rb.AddForce(-75, 0, 0);
-            //Debug.Break();
-        }
-
-        //  DELETE BELOW??? OR KEEEP?
-        if (rightLaneChangeSafe == true && leftLaneChangeSafe == false)
-        {
-            destinationLane++;
-            rb.AddForce(75, 0, 0);
-        }
-        else if (rightLaneChangeSafe == false && leftLaneChangeSafe == true)
-        {
-            destinationLane--;
-            rb.AddForce(-75, 0, 0);
-        }
-        else
-        // DELETE ABOVE ??? OR KEEP???
-    }
-
-
-        // DELETE BELOW?? OR KEEP>>>
-        if (Physics.Raycast(rightForward, out rightForwardHit, lanecheckRayLength) == true || Physics.Raycast(rightBack, out rightBackwardHit, lanecheckRayLength) == true)
-        {
-
-            velocityDifferenceRightForward = rightForwardHit.rigidbody.velocity.z
-            destinationLane++;
-            rb.AddForce(75, 0, 0);
-        }
-        else
-        {
-
-        }
-        // DELETE ABOVE??? OR KEEP??
-        */

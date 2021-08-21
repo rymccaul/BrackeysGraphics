@@ -307,6 +307,7 @@ MonoBehaviour:
   - {fileID: 4664856459876892218, guid: 3a5a80bd58553024caab52d0e2f81fe5, type: 3}
   - {fileID: 4664856459876892218, guid: c5b8c4c67da15534bbe2a9dcd3108fdc, type: 3}
   traffic_count: 20
+  player: {fileID: 904389564}
 --- !u!114 &23369440
 MonoBehaviour:
   m_ObjectHideFlags: 0
