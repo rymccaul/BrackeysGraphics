@@ -22,6 +22,14 @@ public class obstacle_movement : MonoBehaviour
 
     public bool rightLaneChangeSafe;
     public bool leftLaneChangeSafe;
+
+    public float sizeOfLaneCheckBox;
+    private float colliderZdimensionFactor;
+    public bool hasCollidedWithPlayer;
+    //private float collsionDebugDistLeft;
+    //private float collisionDebugDistFront;
+    //private float collsionDebugDistRight;
+    private bool needToHardResetLane;
     /*
     public float velocityDifferenceRightForward;
     public float timeToCollisionRightForward;
@@ -37,6 +45,7 @@ public class obstacle_movement : MonoBehaviour
     public int rightLaneSafetyCount;
     */
     private int layermask;
+    private int obstacleLayermask;
 
     public sensor_script closeSensorScript;
 
@@ -69,7 +78,9 @@ public class obstacle_movement : MonoBehaviour
 
         int sensors = 1 << LayerMask.NameToLayer("sensors");
         int players = 1 << LayerMask.NameToLayer("players");
+        int obstacles = 1 << LayerMask.NameToLayer("obstacles");
         layermask = sensors | players;
+        obstacleLayermask = obstacles;
         layermask = ~layermask;
 
         if (player_obj == null)
@@ -90,8 +101,14 @@ public class obstacle_movement : MonoBehaviour
 
         rb.angularDrag = 1.5f;
 
+        sizeOfLaneCheckBox = 20f;
         //layermask = 1 << 12;
         //layermask = ~layermask;
+
+        colliderZdimensionFactor = GetComponent<BoxCollider>().size.z;
+        colliderZdimensionFactor /= 2.5f;
+        hasCollidedWithPlayer = false;
+        needToHardResetLane = false;
 
     }
     // Update is called once per frame
@@ -111,8 +128,9 @@ public class obstacle_movement : MonoBehaviour
             float xpos = transform.position.x;
             if (Mathf.Abs((destinationLane * 2) - xpos) < 0.1)
             {
+
                 transform.position = new Vector3((destinationLane * 2), transform.position.y, transform.position.z);
-                rb.AddForce(-75, 0, 0);
+                //rb.AddForce(-75, 0, 0);
                 currentLane = destinationLane;
 
                 closeSensorScript.sensorResizeX = 2f;
@@ -120,6 +138,16 @@ public class obstacle_movement : MonoBehaviour
 
                 //GetComponent<Renderer>().material = defaultMat;
                 material_chooser.leftOrRight = 0;
+
+                if (needToHardResetLane == false)
+                {
+                    rb.AddForce(-75, 0, 0);
+                }
+                else
+                {
+                    Vector3 preResetVelocity = rb.velocity;
+                    HardResetLane(preResetVelocity);
+                }
             }
         }
         if (destinationLane < currentLane)
@@ -128,7 +156,7 @@ public class obstacle_movement : MonoBehaviour
             if (Mathf.Abs((destinationLane * 2) - xpos) < 0.1)
             {
                 transform.position = new Vector3((destinationLane * 2), transform.position.y, transform.position.z);
-                rb.AddForce(75, 0, 0);
+                //rb.AddForce(75, 0, 0);
                 currentLane = destinationLane;
 
                 closeSensorScript.sensorResizeX = 2f;
@@ -136,6 +164,16 @@ public class obstacle_movement : MonoBehaviour
 
                 //GetComponent<Renderer>().material = defaultMat;
                 material_chooser.leftOrRight = 0;
+                
+                if (needToHardResetLane == false)
+                {
+                    rb.AddForce(75, 0, 0);
+                }
+                else
+                {
+                    Vector3 preResetVelocity = rb.velocity;
+                    HardResetLane(preResetVelocity);
+                }
             }
         }
     }
@@ -152,35 +190,22 @@ public class obstacle_movement : MonoBehaviour
             rightLaneChangeSafe = false;
             leftLaneChangeSafe = false;
 
-            Vector3 overlapBoxSize = new Vector3(4f, 0.25f, 10f);
+            Vector3 overlapBoxSize = new Vector3(4f, 0.25f, sizeOfLaneCheckBox);
             Vector3 centerPosition = rb.position;
+            centerPosition.z += sizeOfLaneCheckBox - 5f;
 
             Collider[] proximityCheck = Physics.OverlapBox(centerPosition, overlapBoxSize, Quaternion.identity, layermask);
 
             List<Collider> proximityCheckList = new List<Collider>(proximityCheck);
 
             proximityCheckList.Remove(col);
-            proximityCheckList.Remove(otherFront);
+            //proximityCheckList.Remove(otherFront);
 
-            obstacle_movement closeObstacleScript = otherFront.gameObject.GetComponent<obstacle_movement>();
-            int frontDestinationLane = closeObstacleScript.destinationLane;
-            int frontCurrentlane = closeObstacleScript.currentLane;
+            obstacle_movement closeObstacleScript;
 
-            float leftTimeToCollision = 50f;
-            float rightTimeToCollision = 50f;
-
-            if (frontDestinationLane == frontCurrentlane) // the obstacle in front is not changing lanes
-            {
-                needToCheckCurrentLanePreference = true;
-            }
-            else if (frontDestinationLane > frontCurrentlane) // the obstacle in front is changing lanes to the right
-            {
-                rightTimeToCollision = frontTimeToCollision;
-            }
-            else if (frontDestinationLane < frontCurrentlane) // the obstalce in front is changing lanes to the left
-            {
-                leftTimeToCollision = frontTimeToCollision;
-            }
+            float shortestDistanceLeft = 50f;
+            float shortestDistanceRight = 50f;
+            float shortestDistanceCurrent = 50f;
 
 
             //string myMessage = rb.name + " wants to change lanes, in da house is: ";
@@ -192,196 +217,95 @@ public class obstacle_movement : MonoBehaviour
                 //if (go != col)
                 //{
 
+                if (go.gameObject.layer == 10)
+                {
+                    //Debug.Log("error, we got em bois");
                     closeObstacleScript = go.gameObject.GetComponent<obstacle_movement>();
                     int closeDestinationLane = closeObstacleScript.destinationLane;
-                    int closeCurrentLane = closeObstacleScript.currentLane;
+                    int closeLaneDifferential = closeDestinationLane - currentLane;     //closeLaneDifferential = -1 for to the left, 0 for current lane, and +1 for to the right
+                    Rigidbody closeRb = go.attachedRigidbody;
+                    float closeDistance = closeRb.position.z - transform.position.z;
 
-                    //myMessage += go.name + " (destlane = " + closeDestinationLane;
-
-                    if (closeDestinationLane == (currentLane + 1))
+                    if (closeDistance < 0)
                     {
-                        Rigidbody closeRb = go.attachedRigidbody;
-                        float distanceFromCenter = closeRb.position.z - transform.position.z;
-
-                        if (distanceFromCenter < 2 && distanceFromCenter > -2)
-                        {
-                            //myMessage += ", right collision hazard is guaranteed";
-                            rightTimeToCollision = 0;
-                            //Debug.Break();
-                        }
-                        else
-                        {
-
-                            float closeVelocityDifferenceRight = rb.velocity.z - closeRb.velocity.z;
-
-                            if (closeVelocityDifferenceRight != 0)
-                            {
-                                float newRightTimeToCollision = distanceFromCenter / closeVelocityDifferenceRight;
-                                //myMessage += ", right time to collision = " + newRightTimeToCollision;
-                                if (newRightTimeToCollision > 0 && newRightTimeToCollision < rightTimeToCollision)
-                                {
-                                    rightTimeToCollision = newRightTimeToCollision;
-                                    if (needToCheckCurrentLanePreference == true)
-                                    {
-                                        preferCurrentLaneToRight = false;
-
-                                        if (distanceFromCenter > 0)
-                                        {
-                                            if (closeRb.velocity.z < otherFrontVelocity)
-                                            {
-                                                preferCurrentLaneToRight = true;
-                                            }
-                                        }
-
-                                    }
-                                }
-                            }
-
-                        }
-                        //else if (distanceFromCenter < 1 && distanceFromCenter > -1)
-                        //{
-                        //    rightTimeToCollision = 0;
-                        //    myMessage += ", right collision hazard is guaranteed";
-                        //}
-
-
-                    }
-                    else if (closeDestinationLane == (currentLane - 1))
-                    {
-                        Rigidbody closeRb = go.attachedRigidbody;
-                        float distanceFromCenter = closeRb.position.z - transform.position.z;
-
-                        if (distanceFromCenter < 2 && distanceFromCenter > -2)
-                        {
-                            //myMessage += ", left collision hazard is guaranteed";
-                            leftTimeToCollision = 0;
-                            //Debug.Break();
-                        }
-                        else
-                        {
-
-                            float closeVelocityDifferenceLeft = rb.velocity.z - closeRb.velocity.z;
-
-                            if (closeVelocityDifferenceLeft != 0)
-                            {
-                                float newLeftTimeToCollision = distanceFromCenter / closeVelocityDifferenceLeft;
-                                //myMessage += ", left time to collision = " + newLeftTimeToCollision;
-                                if (newLeftTimeToCollision > 0 && newLeftTimeToCollision < leftTimeToCollision)
-                                {
-                                    leftTimeToCollision = newLeftTimeToCollision;
-                                    if (needToCheckCurrentLanePreference == true)
-                                    {
-                                        preferCurrentLaneToLeft = false;
-
-                                        if (distanceFromCenter > 0)
-                                        {
-                                            if (closeRb.velocity.z < otherFrontVelocity)
-                                            {
-                                                preferCurrentLaneToLeft = true;
-                                            }
-                                        }
-
-                                    }
-                                }
-                            }
-
-                        }
+                        //Vector3 debugRay = go.transform.position - rb.position;
+                        //Debug.Log(rb.name + " sees " + go.name + " at a distance of " + closeDistance);
+                        //Debug.DrawRay(rb.position, debugRay, Color.green);
+                        //Debug.Break();
+                        closeDistance = 0;
                     }
 
-                    else if (closeDestinationLane == currentLane && closeDestinationLane != closeCurrentLane)
+                    switch (closeLaneDifferential)
                     {
-                        if (closeDestinationLane > closeCurrentLane) // then they must be changing lanes to the right
-                        {
-                            Rigidbody closeRb = go.attachedRigidbody;
-                            float distanceFromCenter = closeRb.position.z - transform.position.z;
+                        case -1:
 
-                            if (distanceFromCenter < 1 && distanceFromCenter > -1)
+                            if (closeDistance < shortestDistanceLeft)
                             {
-                                leftTimeToCollision = 0;
+                                shortestDistanceLeft = closeDistance;
                             }
-                            else
-                            {
-                                float closeVelocityDifferenceLeft = rb.velocity.z - closeRb.velocity.z;
+                            break;
 
-                                if (closeVelocityDifferenceLeft != 0)
-                                {
-                                    float newLeftTimeToCollision = distanceFromCenter / closeVelocityDifferenceLeft;
-                                    if (newLeftTimeToCollision > 0 && newLeftTimeToCollision < leftTimeToCollision)
-                                    {
-                                        leftTimeToCollision = newLeftTimeToCollision;
+                        case 0:
 
-                                    }
-                                }
+                            if (closeDistance < shortestDistanceCurrent)
+                            {
+                                shortestDistanceCurrent = closeDistance;
                             }
-                        }
-                        else if (closeDestinationLane < closeCurrentLane) // then they must be changing lanes to the left
-                        {
-                            Rigidbody closeRb = go.attachedRigidbody;
-                            float distanceFromCenter = closeRb.position.z - transform.position.z;
+                            break;
+                        case 1:
 
-                            if (distanceFromCenter < 1 && distanceFromCenter > -1)
+                            if (closeDistance < shortestDistanceRight)
                             {
-                                rightTimeToCollision = 0;
+                                shortestDistanceRight = closeDistance;
                             }
-                            else
-                            {
-                                float closeVelocityDifferenceRight = rb.velocity.z - closeRb.velocity.z;
-                                if (closeVelocityDifferenceRight != 0)
-                                {
-                                    float newRightTimeToCollision = distanceFromCenter / closeVelocityDifferenceRight;
-                                    if (newRightTimeToCollision > 0 && newRightTimeToCollision < rightTimeToCollision)
-                                    {
-                                        rightTimeToCollision = newRightTimeToCollision;
-                                    }
-                                }
-                            }
-                        }
+
+                            break;
+                        default:
+                            //Debug.Log("Error with closeLaneDifferential");
+                            break;
                     }
+                }
+                
+
+
+                // below this is old
+                  
 
             }
+
+            //collisionDebugDistFront = shortestDistanceCurrent;
+            //collsionDebugDistLeft = shortestDistanceLeft;
+            //collsionDebugDistRight = shortestDistanceRight;
 
 
             if (currentLane != 3)
             {
-                if (rightTimeToCollision < 0)
+                if (shortestDistanceRight > 10f)
                 {
-                    rightLaneChangeSafe = true;
-                }
-                else if (rightTimeToCollision > 2f)
-                {
-                    if (preferCurrentLaneToRight == false)
+                    if (shortestDistanceRight > (10f * colliderZdimensionFactor))
                     {
-
                         rightLaneChangeSafe = true;
                     }
                     else
                     {
-                        //Debug.Log(rb.name + " likes current lane more than right.");
+                        //Debug.Log("We made a difference, factor is " + colliderZdimensionFactor);
                     }
-
                 }
             }
 
             if (currentLane != -3)
             {
-                if (leftTimeToCollision < 0 )
+                if (shortestDistanceLeft > 10f)
                 {
-                    leftLaneChangeSafe = true;
-                }
-                else if (leftTimeToCollision > 2f)
-                {
-                    if (preferCurrentLaneToLeft == false)
+                    if (shortestDistanceLeft > (10f * colliderZdimensionFactor))
                     {
-
                         leftLaneChangeSafe = true;
                     }
                     else
                     {
-                        //Debug.Log(rb.name + " likes current lane more than left.");
+                        //Debug.Log("We made a difference, factor is " + colliderZdimensionFactor);
                     }
-
                 }
-
             }
 
             if (leftLaneChangeSafe == false && rightLaneChangeSafe == false)
@@ -390,84 +314,63 @@ public class obstacle_movement : MonoBehaviour
                 //Debug.Break();
             }
 
-            if (rightLaneChangeSafe == true)
+            if(rightLaneChangeSafe == true)
             {
-                if (leftLaneChangeSafe == false)
+                if(shortestDistanceRight < shortestDistanceCurrent)
                 {
-                    destinationLane++;
-                    rb.AddForce(75, 0, 0);
-
-                    closeSensorScript.sensorResizeX = 1.5f;
-                    closeSensorScript.sensorPosX = 0.25f;
-
-                    //GetComponent<Renderer>().material = turnSignal;
-                    material_chooser.leftOrRight = 1;
-
+                    rightLaneChangeSafe = false;
+                }
+            }
+            if(leftLaneChangeSafe == true)
+            {
+                if(shortestDistanceLeft < shortestDistanceCurrent)
+                {
+                    leftLaneChangeSafe = false;
+                }
+            }
+            if(leftLaneChangeSafe == true && rightLaneChangeSafe == true)
+            {
+                if(shortestDistanceLeft < shortestDistanceRight)
+                {
+                    leftLaneChangeSafe = false;
                 }
                 else
                 {
-                    if (rightTimeToCollision > leftTimeToCollision)
-                    {
-                        destinationLane++;
-                        rb.AddForce(75, 0, 0);
-
-                        closeSensorScript.sensorResizeX = 1.5f;
-                        closeSensorScript.sensorPosX = 0.25f;
-
-                        //GetComponent<Renderer>().material = turnSignal;
-                        material_chooser.leftOrRight = 1;
-                    }
-                    else if (rightTimeToCollision != leftTimeToCollision)
-                    {
-                        destinationLane--;
-                        rb.AddForce(-75, 0, 0);
-
-                        closeSensorScript.sensorResizeX = 1.5f;
-                        closeSensorScript.sensorPosX = -0.25f;
-
-                        //GetComponent<Renderer>().material = turnSignal;
-                        material_chooser.leftOrRight = -1;
-                    }
-                    else
-                    {
-                        int leftOrRight = Random.Range(1, 3);
-                        if (leftOrRight == 1)
-                        {
-                            destinationLane--;
-                            rb.AddForce(-75, 0, 0);
-
-                            closeSensorScript.sensorResizeX = 1.5f;
-                            closeSensorScript.sensorPosX = -0.25f;
-
-                            //GetComponent<Renderer>().material = turnSignal;
-                            material_chooser.leftOrRight = -1;
-                        }
-                        else
-                        {
-                            destinationLane++;
-                            rb.AddForce(75, 0, 0);
-
-                            closeSensorScript.sensorResizeX = 1.5f;
-                            closeSensorScript.sensorPosX = 0.25f;
-
-                            GetComponent<Renderer>().material = turnSignal;
-                            material_chooser.leftOrRight = 1;
-                        }
-                    }
-
+                    rightLaneChangeSafe = false;
                 }
-                //Debug.Break();
             }
-            else if (leftLaneChangeSafe == true)
+
+            if(rightLaneChangeSafe == true)
+            {
+                destinationLane++;
+                rb.AddForce(75, 0, 0);
+
+                closeSensorScript.sensorResizeX = 1.5f;
+                closeSensorScript.sensorPosX = 0.25f;
+
+                //GetComponent<Renderer>().material = turnSignal;
+                material_chooser.leftOrRight = 1;
+            }else if (leftLaneChangeSafe == true)
             {
                 destinationLane--;
                 rb.AddForce(-75, 0, 0);
 
+                closeSensorScript.sensorResizeX = 1.5f;
+                closeSensorScript.sensorPosX = -0.25f;
+
                 //GetComponent<Renderer>().material = turnSignal;
                 material_chooser.leftOrRight = -1;
-                //Debug.Break();
+            }
+            else
+            {
+                //Debug.Log(rb.name + " didn't want to change lanes.");
             }
 
+            // draw rays to see size of laneCheck box
+            //Debug.DrawRay(centerPosition, Vector3.forward * sizeOfLaneCheckBox, Color.magenta);
+            //Debug.DrawRay(centerPosition, Vector3.back * sizeOfLaneCheckBox, Color.magenta);
+            //Debug.DrawRay(rb.position, Vector3.up * 10f, Color.magenta);
+            //Debug.Break();
         }
     }
 
@@ -478,6 +381,15 @@ public class obstacle_movement : MonoBehaviour
         rightLaneChangeSafe = false;
         leftLaneChangeSafe = false;
         gotBlasted = true;
+        hasCollidedWithPlayer = true;
+    }
+
+    private void HardResetLane(Vector3 preResetVel)
+    {
+        preResetVel.x = 0;
+        rb.velocity = preResetVel;
+        rb.angularVelocity = Vector3.zero;
+        rb.transform.rotation = Quaternion.identity;
     }
 
     private void FindNewSpawnPoint()
@@ -538,15 +450,18 @@ public class obstacle_movement : MonoBehaviour
             closeSensorScript.obstacleRespawn();
 
             gotBlasted = false;
+            hasCollidedWithPlayer = false;
+            needToHardResetLane = false;
         }
     }
 
 
     private void OnCollisionEnter(Collision collision)
     {
+        GameObject collisionGameObject = collision.gameObject;
         if (gotBlasted == true)
         {
-            if (collision.gameObject.layer == 8)
+            if (collisionGameObject.layer == 8)
             {
                 float blastPos = rb.transform.position.x;
                 float xVel = rb.velocity.x;
@@ -626,7 +541,69 @@ public class obstacle_movement : MonoBehaviour
                     }
                 }
                 gotBlasted = false;
+                //needToHardResetLane = true;
             }
+
+            
+        }
+
+        if (collisionGameObject == player_obj)
+        {
+            hasCollidedWithPlayer = true;
+        }else if(collisionGameObject.layer == 10)
+        {
+            if (collisionGameObject.GetComponent<obstacle_movement>().hasCollidedWithPlayer)
+            {
+                hasCollidedWithPlayer = true;
+            }
+        }
+        Vector3 collisionForce = collision.impulse / Time.fixedDeltaTime;
+        float collisionForceMagnitude = collisionForce.magnitude;
+
+        //Debug.Log(rb.name + " collided with " + collision.collider.gameObject.name + ", with force of " + collisionForceMagnitude);
+
+        if (hasCollidedWithPlayer == false)
+        {
+            if (collisionGameObject.layer == 10)
+            {
+                //string collisionDebug;
+                //Debug.DrawRay(rb.position, Vector3.up * 10f, Color.magenta);
+                //collisionDebug = rb.name + " dest: " + destinationLane + ", cur: " + currentLane;
+                //Debug.Log(rb.name + " dest: " + destinationLane + ", cur: " + currentLane);
+
+                if (currentLane != destinationLane)
+                {
+                    //collisionDebug += (", left/current/right distances = " + collsionDebugDistLeft + "/" + collisionDebugDistFront + "/" + collsionDebugDistRight);
+                    int currentLaneHolder = currentLane;
+                    int destinationLaneHolder = destinationLane;
+
+                    currentLane = destinationLaneHolder;
+                    destinationLane = currentLaneHolder;
+
+                    Vector3 newVelocity = rb.velocity;
+                    newVelocity.x = 0;
+                    rb.velocity = newVelocity;
+                    if (currentLane > destinationLane)
+                    {
+                        rb.AddForce(-75f, 0, 0);
+                    }
+                    else
+                    {
+                        rb.AddForce(75f, 0, 0);
+                    }
+                    needToHardResetLane = true;
+                }
+                else
+                {
+                    Vector3 preResetVelocity = rb.velocity;
+                    HardResetLane(rb.velocity);
+                }
+
+                //Debug.Log(collisionDebug);
+                //Debug.Break();
+
+            }
+
         }
 
     }
